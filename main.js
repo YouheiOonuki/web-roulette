@@ -440,8 +440,8 @@
             items2[target.index].classList.add('locked');
           }
 
-          // 中間結果表示
-          showPartialResults(results, roundIdx + 1);
+          // 中間結果表示（確定済みの分だけ渡す）
+          showPartialResults(results.slice(0, roundIdx + 1));
 
           roundIdx++;
 
@@ -477,28 +477,23 @@
     debugLog('演出終了');
   }
 
-  // 中間結果表示（ラウンド進行中）
-  function showPartialResults(results, confirmedCount) {
+  // 中間結果表示（確定済みの結果のみ表示）
+  function showPartialResults(confirmedResults) {
     dom.resultDisplay.classList.remove('hidden');
 
-    if (results.length === 1) {
+    if (confirmedResults.length === 1) {
       dom.resultText.className = 'result-text';
-      dom.resultText.textContent = results[0].candidate.name;
+      dom.resultText.textContent = confirmedResults[0].candidate.name;
       return;
     }
 
     dom.resultText.className = 'result-text multi';
     dom.resultText.innerHTML = '';
 
-    for (var i = 0; i < results.length; i++) {
+    for (var i = 0; i < confirmedResults.length; i++) {
       var span = document.createElement('span');
       span.className = 'result-item';
-      span.textContent = (i + 1) + '. ' + results[i].candidate.name;
-
-      if (i >= confirmedCount) {
-        span.style.opacity = '0.3';
-      }
-
+      span.textContent = (i + 1) + '. ' + confirmedResults[i].candidate.name;
       dom.resultText.appendChild(span);
     }
   }
