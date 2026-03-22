@@ -404,7 +404,7 @@
         }
       }
 
-      var minSteps = settings.testMode ? 8 : 20;
+      var minSteps = settings.testMode ? 8 : 15;
       var remainder = minSteps % available.length;
       var totalSteps = minSteps +
         ((targetAvailIdx - remainder + available.length) % available.length);
@@ -426,9 +426,9 @@
         currentStep++;
 
         if (currentStep <= totalSteps) {
-          var baseInterval = settings.testMode ? 15 : 50;
+          var baseInterval = settings.testMode ? 15 : 40;
           var progress = currentStep / totalSteps;
-          var interval = baseInterval + Math.pow(progress, 2) * 400;
+          var interval = baseInterval + Math.pow(progress, 2) * 350;
           setTimeout(step, interval);
         } else {
           // このラウンドの確定処理
@@ -446,7 +446,7 @@
           roundIdx++;
 
           // 次のラウンドまで少し間を置く
-          var pause = settings.testMode ? 200 : 700;
+          var pause = settings.testMode ? 150 : 500;
           setTimeout(runRound, pause);
         }
       }
