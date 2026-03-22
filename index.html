@@ -56,40 +56,6 @@
   }
   </script>
 
-  <!-- FAQ構造化データ（検索結果にリッチスニペット表示） -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "このルーレットアプリは無料ですか？",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "はい、完全無料です。登録やインストールも不要で、ブラウザからすぐにお使いいただけます。"
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "複数の候補を同時に選べますか？",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "はい、選択数を指定することで、例えば10個の候補から5個をランダムに選ぶといった使い方ができます。"
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "データはどこに保存されますか？",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "すべてのデータはお使いのブラウザのローカルストレージに保存されます。サーバーにデータが送信されることはありません。"
-        }
-      }
-    ]
-  }
-  </script>
-
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
@@ -98,8 +64,8 @@
   <nav class="site-nav" aria-label="メインナビゲーション">
     <a href="./" class="nav-brand" aria-current="page">ルーレットアプリ</a>
     <ul class="nav-links">
-      <li><a href="#how-to-use">使い方</a></li>
-      <li><a href="#faq">よくある質問</a></li>
+      <li><a href="./guide.html">使い方</a></li>
+      <li><a href="./guide.html#faq">よくある質問</a></li>
       <li><a href="./privacy-policy.html">プライバシーポリシー</a></li>
     </ul>
   </nav>
@@ -134,14 +100,6 @@
         </div>
       </div>
     </section>
-
-    <!-- 広告枠（上部・コンテンツ間） -->
-    <div class="ad-container ad-container-top">
-      <!-- AD_PLACEHOLDER_TOP: Google AdSense code will be inserted here -->
-      <div class="ad-placeholder ad-leaderboard" aria-hidden="true">
-        <p>広告スペース (728x90)</p>
-      </div>
-    </div>
 
     <!-- ② 候補一覧 -->
     <section class="candidates-section" aria-label="候補一覧">
@@ -192,60 +150,7 @@
       <button id="clear-history-btn" class="btn btn-secondary" aria-label="履歴をクリア">履歴をクリア</button>
     </section>
 
-    <!-- ⑤ 使い方ガイド（SEO用コンテンツ） -->
-    <section id="how-to-use" class="content-section" aria-label="使い方">
-      <h2>使い方ガイド</h2>
-      <div class="guide-content">
-        <div class="guide-step">
-          <h3>1. 候補を入力する</h3>
-          <p>テキストボックスに候補を入力して「追加」ボタンを押します。改行・カンマ・セミコロンで区切って複数の候補を一度に追加できます。テキストファイル(.txt)からの一括読み込みにも対応しています。</p>
-        </div>
-        <div class="guide-step">
-          <h3>2. 選択数を決める</h3>
-          <p>「選択数」で何個選ぶかを指定します。例えば10個の候補から3個を選びたい場合は「3」と入力します。1個だけ選ぶ通常のルーレットとしても使えます。</p>
-        </div>
-        <div class="guide-step">
-          <h3>3. スタートを押す</h3>
-          <p>「スタート」ボタンを押すとルーレットが回り始めます。演出ONの場合は候補が順番にハイライトされ、徐々に減速して1つずつ確定していく「ドキドキ演出」が楽しめます。</p>
-        </div>
-      </div>
-
-      <h3>こんな場面で使えます</h3>
-      <ul class="use-cases">
-        <li><strong>ランチ決め</strong> — 今日のお昼ごはんを迷ったときに</li>
-        <li><strong>グループ分け</strong> — チームやグループをランダムに振り分け</li>
-        <li><strong>当番決め</strong> — 掃除当番や順番をランダムに決定</li>
-        <li><strong>プレゼント抽選</strong> — イベントやパーティーでの抽選に</li>
-        <li><strong>席替え</strong> — 学校やオフィスの席をランダムに決定</li>
-        <li><strong>お題決め</strong> — ゲームやお絵描きのお題をランダム選出</li>
-      </ul>
-    </section>
-
-    <!-- ⑥ よくある質問（SEO用コンテンツ） -->
-    <section id="faq" class="content-section" aria-label="よくある質問">
-      <h2>よくある質問</h2>
-      <dl class="faq-list">
-        <dt>このアプリは無料ですか？</dt>
-        <dd>はい、完全無料でお使いいただけます。アカウント登録やアプリのインストールも不要です。</dd>
-
-        <dt>複数の候補を同時に選べますか？</dt>
-        <dd>はい、「選択数」を変更することで、複数の候補を一度に選ぶことができます。例えば10個の候補から5個を選ぶといった使い方が可能です。</dd>
-
-        <dt>候補のデータはどこに保存されますか？</dt>
-        <dd>すべてのデータはお使いのブラウザのローカルストレージに保存されます。外部サーバーにデータが送信されることはありません。プライバシーを保護しながら安心してお使いいただけます。</dd>
-
-        <dt>重み付けとは何ですか？</dt>
-        <dd>各候補に1〜3の重みを設定できる機能です。重みが大きいほど選ばれやすくなります。設定画面から「重み付け」をONにすると使用できます。</dd>
-
-        <dt>スマートフォンでも使えますか？</dt>
-        <dd>はい、レスポンシブデザインに対応しているため、スマートフォン・タブレット・パソコンなど、あらゆるデバイスのブラウザでお使いいただけます。</dd>
-
-        <dt>演出をオフにできますか？</dt>
-        <dd>はい、設定画面から「演出」をOFFにすると、アニメーションなしで即座に結果が表示されます。</dd>
-      </dl>
-    </section>
-
-    <!-- ⑦ 設定（最下部） -->
+    <!-- ⑤ 設定（最下部） -->
     <section class="settings-panel" aria-label="設定">
       <h2>設定</h2>
       <div class="settings-grid">
@@ -301,24 +206,24 @@
   </main>
 
   <footer class="app-footer">
-    <!-- 広告枠（フッター上部） -->
-    <div class="ad-container ad-container-bottom">
-      <!-- AD_PLACEHOLDER_BOTTOM: Google AdSense code will be inserted here -->
-      <div class="ad-placeholder ad-rectangle" aria-hidden="true">
-        <p>広告スペース (300x250)</p>
-      </div>
-    </div>
-
     <nav class="footer-nav" aria-label="フッターナビゲーション">
       <ul>
         <li><a href="./">ホーム</a></li>
-        <li><a href="#how-to-use">使い方</a></li>
-        <li><a href="#faq">よくある質問</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="./guide.html#faq">よくある質問</a></li>
         <li><a href="./privacy-policy.html">プライバシーポリシー</a></li>
       </ul>
     </nav>
 
     <p class="copyright">&copy; 2026 ルーレット・くじ引きアプリ. All rights reserved.</p>
+
+    <!-- 広告枠（ページ最下部・UIの外） -->
+    <div class="ad-container">
+      <!-- AD_PLACEHOLDER: Google AdSense code will be inserted here -->
+      <div class="ad-placeholder ad-responsive" aria-hidden="true">
+        <p>広告スペース</p>
+      </div>
+    </div>
   </footer>
 
   <script src="./main.js"></script>

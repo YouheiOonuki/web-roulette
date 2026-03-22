@@ -804,19 +804,11 @@ select {
 }
 
 /* ===========================
-   広告枠
+   広告枠（ページ最下部のみ）
    =========================== */
 .ad-container {
   max-width: 700px;
-  margin: 0.8rem auto;
-}
-
-.ad-container-top {
-  margin: 0 auto 1rem;
-}
-
-.ad-container-bottom {
-  margin: 0 auto 1rem;
+  margin: 1rem auto 0;
 }
 
 .ad-placeholder {
@@ -831,18 +823,10 @@ select {
   justify-content: center;
 }
 
-/* リーダーボード (728x90) */
-.ad-leaderboard {
+/* レスポンシブ広告枠 */
+.ad-responsive {
   min-height: 90px;
-  max-width: 728px;
-  margin: 0 auto;
-}
-
-/* ミディアムレクタングル (300x250) */
-.ad-rectangle {
-  min-height: 250px;
-  max-width: 300px;
-  margin: 0 auto;
+  padding: 1rem;
 }
 
 /* ===========================
