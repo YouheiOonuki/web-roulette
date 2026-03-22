@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ルーレット / くじ引きアプリ</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="app-header">
+    <h1>🎰 ルーレット / くじ引き</h1>
+    <p class="subtitle">候補を入れて「スタート」を押すだけ！</p>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="app-main">
+
+    <!-- 設定パネル -->
+    <section class="settings-panel">
+      <h2>⚙️ 設定</h2>
+      <div class="settings-grid">
+        <!-- テーマ -->
+        <div class="setting-item">
+          <label for="theme-select">テーマ</label>
+          <select id="theme-select">
+            <option value="dark">ダーク</option>
+            <option value="metal">メタル</option>
+            <option value="neon">ネオンサイバー</option>
+            <option value="washi">和紙風</option>
+          </select>
+        </div>
+        <!-- 演出 ON/OFF -->
+        <div class="setting-item">
+          <label for="animation-toggle">演出</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="animation-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <!-- 重み付け ON/OFF -->
+        <div class="setting-item">
+          <label for="weight-toggle">重み付け</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="weight-toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <!-- 履歴 ON/OFF -->
+        <div class="setting-item">
+          <label for="history-toggle">履歴</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="history-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <!-- テストモード -->
+        <div class="setting-item">
+          <label for="test-toggle">テストモード</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="test-toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 候補入力セクション -->
+    <section class="input-section">
+      <h2>📝 候補入力</h2>
+
+      <!-- 手動入力 -->
+      <div class="input-group">
+        <label for="candidate-input">候補を入力</label>
+        <textarea id="candidate-input" rows="3" placeholder="候補を入力してください（複数入力可）"></textarea>
+        <div class="input-controls">
+          <div class="delimiter-select">
+            <label for="delimiter">区切り文字:</label>
+            <select id="delimiter">
+              <option value="newline">改行</option>
+              <option value="comma">カンマ (,)</option>
+              <option value="semicolon">セミコロン (;)</option>
+            </select>
+          </div>
+          <button id="add-btn" class="btn btn-primary">追加</button>
+        </div>
+      </div>
+
+      <!-- ファイルアップロード -->
+      <div class="input-group">
+        <label for="file-upload">ファイルから読み込み (.txt)</label>
+        <div class="file-upload-area">
+          <input type="file" id="file-upload" accept=".txt">
+          <p class="file-hint">区切り文字は上記の設定が適用されます</p>
+        </div>
+      </div>
+
+      <!-- リセット -->
+      <div class="input-group">
+        <button id="reset-btn" class="btn btn-danger">候補をリセット</button>
+        <button id="preset-btn" class="btn btn-secondary">プリセットに戻す</button>
+      </div>
+    </section>
+
+    <!-- 候補一覧 -->
+    <section class="candidates-section">
+      <h2>📋 候補一覧 (<span id="candidate-count">0</span>件)</h2>
+      <ul id="candidate-list" class="candidate-list"></ul>
+    </section>
+
+    <!-- ルーレット表示エリア -->
+    <section class="roulette-section">
+      <h2>🎯 ルーレット</h2>
+
+      <!-- ルーレット表示 -->
+      <div id="roulette-display" class="roulette-display">
+        <span id="roulette-text" class="roulette-text">スタートを押してください</span>
+      </div>
+
+      <!-- 結果表示 -->
+      <div id="result-display" class="result-display hidden">
+        <p class="result-label">結果:</p>
+        <p id="result-text" class="result-text"></p>
+      </div>
+
+      <!-- 操作ボタン -->
+      <div class="roulette-controls">
+        <button id="start-btn" class="btn btn-start">▶ スタート</button>
+        <button id="shuffle-btn" class="btn btn-secondary">🔀 シャッフル</button>
+      </div>
+    </section>
+
+    <!-- 履歴セクション -->
+    <section id="history-section" class="history-section">
+      <h2>📜 履歴 (最新10件)</h2>
+      <ul id="history-list" class="history-list">
+        <li class="history-empty">まだ履歴がありません</li>
+      </ul>
+      <button id="clear-history-btn" class="btn btn-secondary">履歴をクリア</button>
+    </section>
+
+    <!-- デバッグログ（テストモード時のみ表示） -->
+    <section id="debug-section" class="debug-section hidden">
+      <h2>🐛 デバッグログ</h2>
+      <pre id="debug-log" class="debug-log"></pre>
+      <button id="clear-debug-btn" class="btn btn-secondary">ログクリア</button>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="app-footer">
+    <p>&copy; 2026 ルーレットアプリ</p>
+
+    <!-- 広告枠 -->
+    <div class="ad-container">
+      <!-- AD_PLACEHOLDER: Google AdSense code will be inserted here -->
+      <div class="ad-placeholder">
+        <p>広告スペース</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./main.js"></script>
+</body>
+</html>
