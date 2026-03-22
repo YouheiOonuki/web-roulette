@@ -299,19 +299,6 @@ body {
 
 .result-display.hidden { display: none; }
 
-.btn-copy {
-  margin-top: 0.6rem;
-  background-color: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
-  font-size: 0.8rem;
-  padding: 0.35rem 0.9rem;
-}
-.btn-copy:hover:not(:disabled) { filter: brightness(1.12); }
-.btn-copy.copied {
-  background-color: var(--locked-bg);
-  color: var(--locked-text);
-}
-
 .result-label {
   font-size: 0.8rem;
   color: var(--text-secondary);
