@@ -42,6 +42,7 @@
     historySection: document.getElementById('history-section'),
     historyList: document.getElementById('history-list'),
     clearHistoryBtn: document.getElementById('clear-history-btn'),
+    copyResultBtn: document.getElementById('copy-result-btn'),
     debugSection: document.getElementById('debug-section'),
     debugLog: document.getElementById('debug-log'),
     clearDebugBtn: document.getElementById('clear-debug-btn'),
@@ -59,6 +60,7 @@
   };
   var isSpinning = false;
   var testSeed = 42;
+  var lastResults = null; // 直近の結果を保持（コピー用）
 
   // ===========================
   // ローカルストレージ
@@ -500,7 +502,10 @@
 
   // 最終結果表示
   function showResults(results) {
+    lastResults = results;
     dom.resultDisplay.classList.remove('hidden');
+    dom.copyResultBtn.textContent = '📋 結果をコピー';
+    dom.copyResultBtn.classList.remove('copied');
 
     if (results.length === 1) {
       dom.resultText.className = 'result-text';
@@ -516,6 +521,60 @@
       span.className = 'result-item';
       span.textContent = (i + 1) + '. ' + r.candidate.name;
       dom.resultText.appendChild(span);
+    });
+  }
+
+  // 共有用テキストを生成
+  function buildShareText(results) {
+    var lines = [];
+    lines.push('【ルーレット結果】');
+    lines.push('');
+
+    if (results.length === 1) {
+      lines.push('▶ ' + results[0].candidate.name);
+    } else {
+      lines.push(results.length + '件を選出しました:');
+      results.forEach(function (r, i) {
+        lines.push((i + 1) + '. ' + r.candidate.name);
+      });
+    }
+
+    lines.push('');
+    lines.push('候補: ' + candidates.map(function (c) { return c.name; }).join('、'));
+    lines.push('');
+    lines.push('#ルーレット #くじ引き');
+
+    return lines.join('\n');
+  }
+
+  // 結果をクリップボードにコピー
+  function copyResult() {
+    if (!lastResults) return;
+    var text = buildShareText(lastResults);
+
+    navigator.clipboard.writeText(text).then(function () {
+      dom.copyResultBtn.textContent = '✅ コピーしました';
+      dom.copyResultBtn.classList.add('copied');
+      setTimeout(function () {
+        dom.copyResultBtn.textContent = '📋 結果をコピー';
+        dom.copyResultBtn.classList.remove('copied');
+      }, 2000);
+    }).catch(function () {
+      // フォールバック: textarea経由でコピー
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      dom.copyResultBtn.textContent = '✅ コピーしました';
+      dom.copyResultBtn.classList.add('copied');
+      setTimeout(function () {
+        dom.copyResultBtn.textContent = '📋 結果をコピー';
+        dom.copyResultBtn.classList.remove('copied');
+      }, 2000);
     });
   }
 
@@ -761,6 +820,9 @@
     dom.clearDebugBtn.addEventListener('click', function () {
       dom.debugLog.textContent = '';
     });
+
+    // 結果コピー
+    dom.copyResultBtn.addEventListener('click', copyResult);
 
     dom.candidateInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && dom.delimiter.value !== 'newline' && !e.shiftKey) {
