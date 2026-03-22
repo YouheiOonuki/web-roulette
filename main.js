@@ -1,22 +1,23 @@
 // ===========================
 // ルーレット / くじ引きアプリ - main.js
+// 複数選択対応版
 // ===========================
 
 (function () {
   'use strict';
 
   // --- 定数 ---
-  const STORAGE_KEYS = {
+  var STORAGE_KEYS = {
     candidates: 'roulette_candidates',
     settings: 'roulette_settings',
     history: 'roulette_history',
   };
 
-  const DEFAULT_CANDIDATES = ['カレー', 'ラーメン', '寿司', '焼肉', 'パスタ'];
-  const MAX_HISTORY = 10;
+  var DEFAULT_CANDIDATES = ['カレー', 'ラーメン', '寿司', '焼肉', 'パスタ'];
+  var MAX_HISTORY = 10;
 
   // --- DOM要素 ---
-  const dom = {
+  var dom = {
     themeSelect: document.getElementById('theme-select'),
     animationToggle: document.getElementById('animation-toggle'),
     weightToggle: document.getElementById('weight-toggle'),
@@ -36,6 +37,8 @@
     resultText: document.getElementById('result-text'),
     startBtn: document.getElementById('start-btn'),
     shuffleBtn: document.getElementById('shuffle-btn'),
+    selectCount: document.getElementById('select-count'),
+    selectCountMax: document.getElementById('select-count-max'),
     historySection: document.getElementById('history-section'),
     historyList: document.getElementById('history-list'),
     clearHistoryBtn: document.getElementById('clear-history-btn'),
@@ -45,75 +48,64 @@
   };
 
   // --- 状態 ---
-  let candidates = []; // { name: string, weight: number }[]
-  let history = [];
-  let settings = {
-    theme: 'dark',
+  var candidates = []; // { name: string, weight: number }[]
+  var history = [];
+  var settings = {
+    theme: 'washi',
     animation: true,
     weightEnabled: false,
     historyEnabled: true,
     testMode: false,
   };
-  let isSpinning = false; // ルーレット回転中フラグ
-  let testSeed = 42; // テストモード用シード
+  var isSpinning = false;
+  var testSeed = 42;
 
   // ===========================
   // ローカルストレージ
   // ===========================
 
-  /** 候補を保存 */
   function saveCandidates() {
     localStorage.setItem(STORAGE_KEYS.candidates, JSON.stringify(candidates));
     debugLog('候補を保存: ' + candidates.length + '件');
   }
 
-  /** 候補を読み込み */
   function loadCandidates() {
-    const data = localStorage.getItem(STORAGE_KEYS.candidates);
+    var data = localStorage.getItem(STORAGE_KEYS.candidates);
     if (data) {
       try {
         candidates = JSON.parse(data);
         debugLog('候補を読み込み: ' + candidates.length + '件');
       } catch (e) {
-        debugLog('候補の読み込みに失敗: ' + e.message);
         candidates = [];
       }
     }
     return candidates.length > 0;
   }
 
-  /** 設定を保存 */
   function saveSettings() {
     localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(settings));
   }
 
-  /** 設定を読み込み */
   function loadSettings() {
-    const data = localStorage.getItem(STORAGE_KEYS.settings);
+    var data = localStorage.getItem(STORAGE_KEYS.settings);
     if (data) {
       try {
-        const saved = JSON.parse(data);
-        settings = { ...settings, ...saved };
-      } catch (e) {
-        debugLog('設定の読み込みに失敗');
-      }
+        var saved = JSON.parse(data);
+        for (var key in saved) {
+          if (saved.hasOwnProperty(key)) settings[key] = saved[key];
+        }
+      } catch (e) { /* ignore */ }
     }
   }
 
-  /** 履歴を保存 */
   function saveHistory() {
     localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(history));
   }
 
-  /** 履歴を読み込み */
   function loadHistory() {
-    const data = localStorage.getItem(STORAGE_KEYS.history);
+    var data = localStorage.getItem(STORAGE_KEYS.history);
     if (data) {
-      try {
-        history = JSON.parse(data);
-      } catch (e) {
-        history = [];
-      }
+      try { history = JSON.parse(data); } catch (e) { history = []; }
     }
   }
 
@@ -121,21 +113,36 @@
   // デバッグログ
   // ===========================
 
-  /** デバッグメッセージを追加 */
   function debugLog(msg) {
     if (!settings.testMode) return;
-    const time = new Date().toLocaleTimeString('ja-JP');
-    const line = '[' + time + '] ' + msg + '\n';
-    dom.debugLog.textContent += line;
+    var time = new Date().toLocaleTimeString('ja-JP');
+    dom.debugLog.textContent += '[' + time + '] ' + msg + '\n';
     dom.debugLog.scrollTop = dom.debugLog.scrollHeight;
     console.log('[DEBUG]', msg);
+  }
+
+  // ===========================
+  // 乱数
+  // ===========================
+
+  function seededRandom() {
+    testSeed = (testSeed * 16807) % 2147483647;
+    return (testSeed - 1) / 2147483646;
+  }
+
+  function getRandom() {
+    if (settings.testMode) {
+      var r = seededRandom();
+      debugLog('乱数(シード): ' + r.toFixed(4));
+      return r;
+    }
+    return Math.random();
   }
 
   // ===========================
   // 候補管理
   // ===========================
 
-  /** プリセット候補をセット */
   function setPresetCandidates() {
     candidates = DEFAULT_CANDIDATES.map(function (name) {
       return { name: name, weight: 1 };
@@ -145,44 +152,36 @@
     debugLog('プリセット候補をセット');
   }
 
-  /** テキストを区切り文字でパース */
   function parseText(text, delimiterType) {
-    var separator;
+    var sep;
     switch (delimiterType) {
-      case 'comma':
-        separator = ',';
-        break;
-      case 'semicolon':
-        separator = ';';
-        break;
-      default:
-        separator = '\n';
+      case 'comma': sep = ','; break;
+      case 'semicolon': sep = ';'; break;
+      default: sep = '\n';
     }
-    return text
-      .split(separator)
+    return text.split(sep)
       .map(function (s) { return s.trim(); })
       .filter(function (s) { return s.length > 0; });
   }
 
-  /** 候補を追加 */
-  function addCandidates(names) {
+  function addCandidatesFromNames(names) {
     names.forEach(function (name) {
       candidates.push({ name: name, weight: 1 });
     });
     saveCandidates();
     renderCandidates();
+    updateSelectCountMax();
     debugLog('候補を追加: ' + names.join(', '));
   }
 
-  /** 候補を削除 */
   function removeCandidate(index) {
     var removed = candidates.splice(index, 1);
     saveCandidates();
     renderCandidates();
+    updateSelectCountMax();
     debugLog('候補を削除: ' + (removed[0] ? removed[0].name : ''));
   }
 
-  /** 候補の重みを変更 */
   function updateWeight(index, weight) {
     if (candidates[index]) {
       candidates[index].weight = parseInt(weight, 10);
@@ -191,16 +190,25 @@
     }
   }
 
+  // 選択数の上限を更新
+  function updateSelectCountMax() {
+    var max = candidates.length || 1;
+    dom.selectCount.max = max;
+    dom.selectCountMax.textContent = '/ ' + candidates.length + '件';
+    // 現在値が上限を超えていたら補正
+    if (parseInt(dom.selectCount.value, 10) > max) {
+      dom.selectCount.value = max;
+    }
+  }
+
   // ===========================
   // 候補一覧の描画
   // ===========================
 
-  /** 候補リストを描画 */
   function renderCandidates() {
     dom.candidateList.innerHTML = '';
     dom.candidateCount.textContent = candidates.length;
 
-    // 重み付け表示の切り替え
     if (settings.weightEnabled) {
       dom.candidateList.classList.add('weight-enabled');
     } else {
@@ -210,7 +218,7 @@
     if (candidates.length === 0) {
       var li = document.createElement('li');
       li.className = 'candidate-empty';
-      li.textContent = '候補がありません。入力してください。';
+      li.textContent = '候補がありません。下の入力欄から追加してください。';
       dom.candidateList.appendChild(li);
       return;
     }
@@ -220,7 +228,6 @@
       li.className = 'candidate-item';
       li.setAttribute('data-index', i);
 
-      // 候補情報
       var info = document.createElement('div');
       info.className = 'candidate-info';
 
@@ -232,33 +239,30 @@
       // 重み付けUI
       var weightSpan = document.createElement('span');
       weightSpan.className = 'candidate-weight';
-      var weightLabel = document.createElement('span');
-      weightLabel.textContent = '重み:';
-      var weightSelect = document.createElement('select');
+      var wLabel = document.createElement('span');
+      wLabel.textContent = '重み:';
+      var wSelect = document.createElement('select');
       [1, 2, 3].forEach(function (w) {
         var opt = document.createElement('option');
         opt.value = w;
         opt.textContent = w;
         if (c.weight === w) opt.selected = true;
-        weightSelect.appendChild(opt);
+        wSelect.appendChild(opt);
       });
-      weightSelect.addEventListener('change', function () {
+      wSelect.addEventListener('change', function () {
         updateWeight(i, this.value);
       });
-      weightSpan.appendChild(weightLabel);
-      weightSpan.appendChild(weightSelect);
+      weightSpan.appendChild(wLabel);
+      weightSpan.appendChild(wSelect);
       info.appendChild(weightSpan);
 
       li.appendChild(info);
 
-      // 削除ボタン
       var delBtn = document.createElement('button');
       delBtn.className = 'candidate-delete';
       delBtn.textContent = '✕';
       delBtn.title = '削除';
-      delBtn.addEventListener('click', function () {
-        removeCandidate(i);
-      });
+      delBtn.addEventListener('click', function () { removeCandidate(i); });
       li.appendChild(delBtn);
 
       dom.candidateList.appendChild(li);
@@ -266,168 +270,280 @@
   }
 
   // ===========================
-  // ランダム選択（重み付き対応）
+  // 複数選択ランダムピック（重み付き対応）
   // ===========================
 
-  /** テストモード用の擬似乱数 */
-  function seededRandom() {
-    testSeed = (testSeed * 16807) % 2147483647;
-    return (testSeed - 1) / 2147483646;
-  }
+  function weightedRandomPickMultiple(count) {
+    if (candidates.length === 0) return [];
+    var n = Math.min(count, candidates.length);
 
-  /** 乱数取得（テストモード対応） */
-  function getRandom() {
-    if (settings.testMode) {
-      var r = seededRandom();
-      debugLog('乱数(シード): ' + r.toFixed(4));
-      return r;
-    }
-    return Math.random();
-  }
-
-  /** 重み付きランダム選択 */
-  function weightedRandomPick() {
-    if (candidates.length === 0) return null;
-
-    if (!settings.weightEnabled) {
-      // 重みなし：均等
-      var idx = Math.floor(getRandom() * candidates.length);
-      return { index: idx, candidate: candidates[idx] };
-    }
-
-    // 重み付き：重み分だけプールに追加
-    var pool = [];
-    candidates.forEach(function (c, i) {
-      for (var w = 0; w < c.weight; w++) {
-        pool.push(i);
-      }
+    // 残り候補をコピー（元のインデックスを保持）
+    var remaining = candidates.map(function (c, i) {
+      return { name: c.name, weight: c.weight, originalIndex: i };
     });
 
-    var pickedIdx = pool[Math.floor(getRandom() * pool.length)];
-    return { index: pickedIdx, candidate: candidates[pickedIdx] };
+    var results = [];
+
+    for (var r = 0; r < n; r++) {
+      var picked;
+
+      if (!settings.weightEnabled) {
+        // 均等選択
+        var idx = Math.floor(getRandom() * remaining.length);
+        picked = remaining[idx];
+        remaining.splice(idx, 1);
+      } else {
+        // 重み付き選択
+        var pool = [];
+        remaining.forEach(function (c, i) {
+          for (var w = 0; w < c.weight; w++) pool.push(i);
+        });
+        var poolIdx = Math.floor(getRandom() * pool.length);
+        var remIdx = pool[poolIdx];
+        picked = remaining[remIdx];
+        remaining.splice(remIdx, 1);
+      }
+
+      results.push({
+        index: picked.originalIndex,
+        candidate: { name: picked.name, weight: picked.weight }
+      });
+    }
+
+    return results;
   }
 
   // ===========================
   // ルーレット演出
   // ===========================
 
-  /** 演出なし：即時選択 */
-  function instantPick() {
-    var result = weightedRandomPick();
-    if (!result) return;
-
-    showResult(result.candidate.name);
-    addHistory(result.candidate.name);
-    highlightCandidate(result.index);
-    debugLog('即時選択: ' + result.candidate.name);
+  // ハイライト(アニメ用)をクリア。lockedは残す
+  function clearAnimHighlights() {
+    var items = dom.candidateList.querySelectorAll('.candidate-item.highlight');
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('highlight');
+    }
   }
 
-  /** 演出あり：ドキドキルーレット */
+  // 全ハイライト(locked含む)をクリア
+  function clearAllHighlights() {
+    var items = dom.candidateList.querySelectorAll('.candidate-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('highlight');
+      items[i].classList.remove('locked');
+    }
+  }
+
+  // 演出なし：即時選択
+  function instantPick() {
+    var count = getSelectCount();
+    var results = weightedRandomPickMultiple(count);
+    if (results.length === 0) return;
+
+    showResults(results);
+    addHistoryEntry(results);
+
+    // ハイライト
+    clearAllHighlights();
+    results.forEach(function (r) {
+      var items = dom.candidateList.querySelectorAll('.candidate-item');
+      if (items[r.index]) items[r.index].classList.add('locked');
+    });
+
+    debugLog('即時選択: ' + results.map(function (r) { return r.candidate.name; }).join(', '));
+  }
+
+  // 演出あり：ドキドキルーレット（複数選択対応）
   function animatedPick() {
-    var result = weightedRandomPick();
-    if (!result) return;
+    var count = getSelectCount();
+    var results = weightedRandomPickMultiple(count);
+    if (results.length === 0) return;
 
     isSpinning = true;
     dom.startBtn.disabled = true;
     dom.shuffleBtn.disabled = true;
     dom.resultDisplay.classList.add('hidden');
-    dom.rouletteDisplay.classList.add('spinning');
     dom.rouletteDisplay.classList.remove('decided');
+    clearAllHighlights();
 
-    var minSteps = settings.testMode ? 10 : 25; // テストモードは高速
-    // totalStepsを調整して最後のステップが結果のインデックスに一致するようにする
-    var remainder = minSteps % candidates.length;
-    var targetRemainder = result.index;
-    var totalSteps = minSteps + ((targetRemainder - remainder + candidates.length) % candidates.length);
-    var currentStep = 0;
+    var lockedIndices = {}; // 確定済みインデックスのセット
+    var roundIdx = 0;
 
-    debugLog('演出開始: 合計ステップ=' + totalSteps + ', 結果=' + result.candidate.name);
+    debugLog('演出開始: ' + count + '個選択, 結果=[' +
+      results.map(function (r) { return r.candidate.name; }).join(', ') + ']');
 
-    function step() {
-      // 前のハイライトを消す
-      clearHighlights();
-
-      // 現在の候補をハイライト
-      var currentIndex = currentStep % candidates.length;
-      var items = dom.candidateList.querySelectorAll('.candidate-item');
-      if (items[currentIndex]) {
-        items[currentIndex].classList.add('highlight');
+    function runRound() {
+      if (roundIdx >= results.length) {
+        // 全ラウンド完了
+        finishMultiRoulette(results);
+        return;
       }
 
-      // ルーレット表示を更新
-      dom.rouletteText.textContent = candidates[currentIndex].name;
+      var target = results[roundIdx];
+      dom.rouletteDisplay.classList.add('spinning');
 
-      currentStep++;
+      // アニメ対象：locked でない候補のみ
+      var available = [];
+      candidates.forEach(function (c, i) {
+        if (!lockedIndices[i]) {
+          available.push({ candidate: c, originalIndex: i });
+        }
+      });
 
-      if (currentStep <= totalSteps) {
-        // 減速：後半ほど間隔が長くなる
-        var baseInterval = settings.testMode ? 20 : 50;
-        var progress = currentStep / totalSteps;
-        var interval = baseInterval + Math.pow(progress, 2) * 450;
-        setTimeout(step, interval);
-      } else {
-        // 最後のステップ：結果を表示（既に結果候補がハイライト済み）
-        finishRoulette(result);
+      if (available.length === 0) {
+        finishMultiRoulette(results);
+        return;
       }
+
+      // 最後のステップが target に止まるよう totalSteps を調整
+      var targetAvailIdx = -1;
+      for (var a = 0; a < available.length; a++) {
+        if (available[a].originalIndex === target.index) {
+          targetAvailIdx = a;
+          break;
+        }
+      }
+
+      var minSteps = settings.testMode ? 8 : 20;
+      var remainder = minSteps % available.length;
+      var totalSteps = minSteps +
+        ((targetAvailIdx - remainder + available.length) % available.length);
+
+      var currentStep = 0;
+
+      function step() {
+        clearAnimHighlights();
+
+        var curAvailIdx = currentStep % available.length;
+        var curOrigIdx = available[curAvailIdx].originalIndex;
+
+        var items = dom.candidateList.querySelectorAll('.candidate-item');
+        if (items[curOrigIdx]) {
+          items[curOrigIdx].classList.add('highlight');
+        }
+
+        dom.rouletteText.textContent = available[curAvailIdx].candidate.name;
+        currentStep++;
+
+        if (currentStep <= totalSteps) {
+          var baseInterval = settings.testMode ? 15 : 50;
+          var progress = currentStep / totalSteps;
+          var interval = baseInterval + Math.pow(progress, 2) * 400;
+          setTimeout(step, interval);
+        } else {
+          // このラウンドの確定処理
+          clearAnimHighlights();
+          lockedIndices[target.index] = true;
+
+          var items2 = dom.candidateList.querySelectorAll('.candidate-item');
+          if (items2[target.index]) {
+            items2[target.index].classList.add('locked');
+          }
+
+          // 中間結果表示
+          showPartialResults(results, roundIdx + 1);
+
+          roundIdx++;
+
+          // 次のラウンドまで少し間を置く
+          var pause = settings.testMode ? 200 : 700;
+          setTimeout(runRound, pause);
+        }
+      }
+
+      step();
     }
 
-    step();
+    runRound();
   }
 
-  /** ルーレット終了処理 */
-  function finishRoulette(result) {
+  function finishMultiRoulette(results) {
     dom.rouletteDisplay.classList.remove('spinning');
     dom.rouletteDisplay.classList.add('decided');
-    dom.rouletteText.textContent = result.candidate.name;
-    showResult(result.candidate.name);
-    addHistory(result.candidate.name);
-    highlightCandidate(result.index);
+
+    if (results.length === 1) {
+      dom.rouletteText.textContent = results[0].candidate.name;
+    } else {
+      dom.rouletteText.textContent = results.length + '個を選択しました！';
+    }
+
+    showResults(results);
+    addHistoryEntry(results);
 
     isSpinning = false;
     dom.startBtn.disabled = false;
     dom.shuffleBtn.disabled = false;
 
-    debugLog('演出終了: ' + result.candidate.name);
+    debugLog('演出終了');
   }
 
-  /** 結果を表示 */
-  function showResult(name) {
-    dom.resultText.textContent = name;
+  // 中間結果表示（ラウンド進行中）
+  function showPartialResults(results, confirmedCount) {
     dom.resultDisplay.classList.remove('hidden');
-  }
 
-  /** 候補をハイライト */
-  function highlightCandidate(index) {
-    clearHighlights();
-    var items = dom.candidateList.querySelectorAll('.candidate-item');
-    if (items[index]) {
-      items[index].classList.add('highlight');
+    if (results.length === 1) {
+      dom.resultText.className = 'result-text';
+      dom.resultText.textContent = results[0].candidate.name;
+      return;
+    }
+
+    dom.resultText.className = 'result-text multi';
+    dom.resultText.innerHTML = '';
+
+    for (var i = 0; i < results.length; i++) {
+      var span = document.createElement('span');
+      span.className = 'result-item';
+      span.textContent = (i + 1) + '. ' + results[i].candidate.name;
+
+      if (i >= confirmedCount) {
+        span.style.opacity = '0.3';
+      }
+
+      dom.resultText.appendChild(span);
     }
   }
 
-  /** 全ハイライトを消す */
-  function clearHighlights() {
-    var items = dom.candidateList.querySelectorAll('.candidate-item.highlight');
-    items.forEach(function (item) {
-      item.classList.remove('highlight');
+  // 最終結果表示
+  function showResults(results) {
+    dom.resultDisplay.classList.remove('hidden');
+
+    if (results.length === 1) {
+      dom.resultText.className = 'result-text';
+      dom.resultText.textContent = results[0].candidate.name;
+      return;
+    }
+
+    dom.resultText.className = 'result-text multi';
+    dom.resultText.innerHTML = '';
+
+    results.forEach(function (r, i) {
+      var span = document.createElement('span');
+      span.className = 'result-item';
+      span.textContent = (i + 1) + '. ' + r.candidate.name;
+      dom.resultText.appendChild(span);
     });
+  }
+
+  // 選択数を取得
+  function getSelectCount() {
+    var val = parseInt(dom.selectCount.value, 10);
+    if (isNaN(val) || val < 1) val = 1;
+    if (val > candidates.length) val = candidates.length;
+    return val;
   }
 
   // ===========================
   // シャッフルモード
   // ===========================
 
-  /** Fisher-Yatesシャッフル */
   function shuffleCandidates() {
     if (candidates.length < 2) return;
-
     for (var i = candidates.length - 1; i > 0; i--) {
       var j = Math.floor(getRandom() * (i + 1));
       var temp = candidates[i];
       candidates[i] = candidates[j];
       candidates[j] = temp;
     }
-
     saveCandidates();
     renderCandidates();
     debugLog('シャッフル実行');
@@ -437,28 +553,26 @@
   // 履歴
   // ===========================
 
-  /** 履歴に追加 */
-  function addHistory(name) {
+  function addHistoryEntry(results) {
     if (!settings.historyEnabled) return;
 
+    var names = results.map(function (r) { return r.candidate.name; }).join(', ');
     var entry = {
-      name: name,
+      name: names,
+      count: results.length,
       time: new Date().toLocaleString('ja-JP'),
     };
 
     history.unshift(entry);
-
-    // 最大件数を超えたら削除
     if (history.length > MAX_HISTORY) {
       history = history.slice(0, MAX_HISTORY);
     }
 
     saveHistory();
     renderHistory();
-    debugLog('履歴に追加: ' + name);
+    debugLog('履歴に追加: ' + names);
   }
 
-  /** 履歴を描画 */
   function renderHistory() {
     dom.historyList.innerHTML = '';
 
@@ -466,7 +580,6 @@
       dom.historySection.style.display = 'none';
       return;
     }
-
     dom.historySection.style.display = '';
 
     if (history.length === 0) {
@@ -495,10 +608,9 @@
   }
 
   // ===========================
-  // テーマ切り替え
+  // テーマ
   // ===========================
 
-  /** テーマを適用 */
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     settings.theme = theme;
@@ -510,7 +622,6 @@
   // 設定の反映
   // ===========================
 
-  /** 設定をUIに反映 */
   function applySettings() {
     dom.themeSelect.value = settings.theme;
     dom.animationToggle.checked = settings.animation;
@@ -520,14 +631,12 @@
 
     applyTheme(settings.theme);
 
-    // テストモードのデバッグセクション表示
     if (settings.testMode) {
       dom.debugSection.classList.remove('hidden');
     } else {
       dom.debugSection.classList.add('hidden');
     }
 
-    // 履歴セクション表示
     if (settings.historyEnabled) {
       dom.historySection.style.display = '';
     } else {
@@ -540,19 +649,16 @@
   // ===========================
 
   function setupEventListeners() {
-    // テーマ切り替え
     dom.themeSelect.addEventListener('change', function () {
       applyTheme(this.value);
     });
 
-    // 演出ON/OFF
     dom.animationToggle.addEventListener('change', function () {
       settings.animation = this.checked;
       saveSettings();
       debugLog('演出: ' + (settings.animation ? 'ON' : 'OFF'));
     });
 
-    // 重み付けON/OFF
     dom.weightToggle.addEventListener('change', function () {
       settings.weightEnabled = this.checked;
       saveSettings();
@@ -560,7 +666,6 @@
       debugLog('重み付け: ' + (settings.weightEnabled ? 'ON' : 'OFF'));
     });
 
-    // 履歴ON/OFF
     dom.historyToggle.addEventListener('change', function () {
       settings.historyEnabled = this.checked;
       saveSettings();
@@ -568,69 +673,63 @@
       debugLog('履歴: ' + (settings.historyEnabled ? 'ON' : 'OFF'));
     });
 
-    // テストモードON/OFF
     dom.testToggle.addEventListener('change', function () {
       settings.testMode = this.checked;
       saveSettings();
       if (settings.testMode) {
         dom.debugSection.classList.remove('hidden');
-        testSeed = 42; // シードリセット
+        testSeed = 42;
         debugLog('テストモード有効');
       } else {
         dom.debugSection.classList.add('hidden');
       }
     });
 
-    // 候補追加
     dom.addBtn.addEventListener('click', function () {
       var text = dom.candidateInput.value;
       if (!text.trim()) return;
       var names = parseText(text, dom.delimiter.value);
       if (names.length > 0) {
-        addCandidates(names);
+        addCandidatesFromNames(names);
         dom.candidateInput.value = '';
       }
     });
 
-    // ファイルアップロード
     dom.fileUpload.addEventListener('change', function (e) {
       var file = e.target.files[0];
       if (!file) return;
-
       var reader = new FileReader();
       reader.onload = function (event) {
         var text = event.target.result;
         var names = parseText(text, dom.delimiter.value);
         if (names.length > 0) {
-          addCandidates(names);
+          addCandidatesFromNames(names);
           debugLog('ファイル読み込み: ' + file.name + ' (' + names.length + '件)');
         }
-        // ファイル入力をリセット
         dom.fileUpload.value = '';
       };
       reader.readAsText(file, 'UTF-8');
     });
 
-    // リセット
     dom.resetBtn.addEventListener('click', function () {
       if (confirm('候補をすべて削除しますか？')) {
         candidates = [];
         saveCandidates();
         renderCandidates();
+        updateSelectCountMax();
         dom.resultDisplay.classList.add('hidden');
         dom.rouletteText.textContent = 'スタートを押してください';
         debugLog('候補をリセット');
       }
     });
 
-    // プリセットに戻す
     dom.presetBtn.addEventListener('click', function () {
       setPresetCandidates();
+      updateSelectCountMax();
       dom.resultDisplay.classList.add('hidden');
       dom.rouletteText.textContent = 'スタートを押してください';
     });
 
-    // スタート
     dom.startBtn.addEventListener('click', function () {
       if (isSpinning) return;
       if (candidates.length === 0) {
@@ -639,7 +738,7 @@
       }
 
       dom.resultDisplay.classList.add('hidden');
-      clearHighlights();
+      clearAllHighlights();
 
       if (settings.animation) {
         animatedPick();
@@ -648,7 +747,6 @@
       }
     });
 
-    // シャッフル
     dom.shuffleBtn.addEventListener('click', function () {
       if (isSpinning) return;
       if (candidates.length < 2) {
@@ -658,7 +756,6 @@
       shuffleCandidates();
     });
 
-    // 履歴クリア
     dom.clearHistoryBtn.addEventListener('click', function () {
       history = [];
       saveHistory();
@@ -666,14 +763,11 @@
       debugLog('履歴をクリア');
     });
 
-    // デバッグログクリア
     dom.clearDebugBtn.addEventListener('click', function () {
       dom.debugLog.textContent = '';
     });
 
-    // Enterキーで候補追加
     dom.candidateInput.addEventListener('keydown', function (e) {
-      // 改行区切りの場合はEnterで追加しない（改行入力のため）
       if (e.key === 'Enter' && dom.delimiter.value !== 'newline' && !e.shiftKey) {
         e.preventDefault();
         dom.addBtn.click();
@@ -686,30 +780,24 @@
   // ===========================
 
   function init() {
-    // 設定を読み込み
     loadSettings();
     applySettings();
 
-    // 候補を読み込み（なければプリセット）
     var hasData = loadCandidates();
     if (!hasData) {
       setPresetCandidates();
     }
 
-    // 履歴を読み込み
     loadHistory();
 
-    // UI描画
     renderCandidates();
     renderHistory();
+    updateSelectCountMax();
 
-    // イベントリスナー設定
     setupEventListeners();
-
     debugLog('アプリ初期化完了');
   }
 
-  // DOMContentLoaded で初期化
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
