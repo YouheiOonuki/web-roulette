@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="washi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>無料ルーレット・くじ引きアプリ｜複数選択対応・ブラウザで即使える</title>
+  <meta name="description" content="完全無料のオンラインルーレット・くじ引きアプリ。候補を入力してスタートを押すだけ。複数選択、重み付け、シャッフル機能付き。登録不要・インストール不要でブラウザからすぐ使えます。">
+  <meta name="keywords" content="ルーレット,くじ引き,ランダム選択,抽選,無料,オンライン,複数選択,シャッフル,ランダムピッカー">
+  <meta name="author" content="ルーレットアプリ">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://youheioonuki.github.io/web-roulette/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="無料ルーレット・くじ引きアプリ｜複数選択対応">
+  <meta property="og:description" content="候補を入力してスタートを押すだけ。複数選択・重み付け・シャッフル対応の無料オンラインルーレット。登録不要で今すぐ使えます。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://youheioonuki.github.io/web-roulette/">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:site_name" content="ルーレット・くじ引きアプリ">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="無料ルーレット・くじ引きアプリ｜複数選択対応">
+  <meta name="twitter:description" content="候補を入力してスタートを押すだけ。複数選択・重み付け・シャッフル対応の無料ルーレット。">
+
+  <!-- テーマカラー -->
+  <meta name="theme-color" content="#8b4513">
+
+  <!-- 構造化データ (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ルーレット・くじ引きアプリ",
+    "description": "完全無料のオンラインルーレット・くじ引きアプリ。候補を入力してランダムに選択。複数選択、重み付け、シャッフル機能付き。",
+    "url": "https://youheioonuki.github.io/web-roulette/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    },
+    "inLanguage": "ja",
+    "browserRequirements": "Requires JavaScript",
+    "softwareVersion": "1.0",
+    "featureList": [
+      "ランダムルーレット",
+      "複数候補の同時選択",
+      "重み付け抽選",
+      "シャッフル機能",
+      "演出ON/OFF",
+      "6種類のテーマ",
+      "履歴管理"
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>無料ルーレット・くじ引きアプリ</h1>
+    <p class="subtitle">候補を入れて「スタート」を押すだけ！登録不要・完全無料</p>
+  </header>
+
+  <main class="app-main">
+
+    <!-- ① ルーレット表示エリア（最上部） -->
+    <section class="roulette-section" aria-label="ルーレット">
+      <div id="roulette-display" class="roulette-display" role="status" aria-live="polite">
+        <span id="roulette-text" class="roulette-text">スタートを押してください</span>
+      </div>
+
+      <div id="result-display" class="result-display hidden" role="alert" aria-live="assertive">
+        <p class="result-label">結果</p>
+        <div id="result-text" class="result-text"></div>
+      </div>
+
+      <div class="roulette-controls">
+        <div class="select-count-group">
+          <label for="select-count">選択数:</label>
+          <input type="number" id="select-count" min="1" value="1" aria-describedby="select-count-max">
+          <span id="select-count-max" class="select-count-max"></span>
+        </div>
+        <div class="roulette-buttons">
+          <button id="start-btn" class="btn btn-start" aria-label="ルーレットをスタート">▶ スタート</button>
+          <button id="shuffle-btn" class="btn btn-secondary" aria-label="候補をシャッフル">🔀 シャッフル</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ② 候補一覧 -->
+    <section class="candidates-section" aria-label="候補一覧">
+      <h2>候補一覧 (<span id="candidate-count">0</span>件)</h2>
+      <ul id="candidate-list" class="candidate-list" role="list"></ul>
+    </section>
+
+    <!-- ③ 候補入力 -->
+    <section class="input-section" aria-label="候補入力">
+      <h2>候補を追加</h2>
+
+      <div class="input-group">
+        <label for="candidate-input">手動入力</label>
+        <textarea id="candidate-input" rows="3" placeholder="候補を入力（複数入力可）" aria-describedby="delimiter-hint"></textarea>
+        <div class="input-controls">
+          <div class="delimiter-select">
+            <label for="delimiter">区切り:</label>
+            <select id="delimiter" aria-label="区切り文字の選択">
+              <option value="newline">改行</option>
+              <option value="comma">カンマ (,)</option>
+              <option value="semicolon">セミコロン (;)</option>
+            </select>
+          </div>
+          <button id="add-btn" class="btn btn-primary" aria-label="候補を追加">追加</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="file-upload">ファイルから読み込み (.txt)</label>
+        <div class="file-upload-area">
+          <input type="file" id="file-upload" accept=".txt" aria-label="テキストファイルから候補を読み込み">
+          <p class="file-hint" id="delimiter-hint">区切り文字は上記の設定が適用されます</p>
+        </div>
+      </div>
+
+      <div class="input-group input-group-buttons">
+        <button id="reset-btn" class="btn btn-danger" aria-label="候補をすべて削除">候補をリセット</button>
+        <button id="preset-btn" class="btn btn-secondary" aria-label="プリセット候補に戻す">プリセットに戻す</button>
+      </div>
+    </section>
+
+    <!-- ④ 履歴 -->
+    <section id="history-section" class="history-section" aria-label="抽選履歴">
+      <h2>履歴 (最新10件)</h2>
+      <ul id="history-list" class="history-list" role="list">
+        <li class="history-empty">まだ履歴がありません</li>
+      </ul>
+      <button id="clear-history-btn" class="btn btn-secondary" aria-label="履歴をクリア">履歴をクリア</button>
+    </section>
+
+    <!-- ⑤ 設定（最下部） -->
+    <section class="settings-panel" aria-label="設定">
+      <h2>設定</h2>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <label for="theme-select">テーマ</label>
+          <select id="theme-select" aria-label="テーマの選択">
+            <option value="washi">和紙風</option>
+            <option value="mori">森</option>
+            <option value="aizome">藍染</option>
+            <option value="dark">ダーク</option>
+            <option value="metal">メタル</option>
+            <option value="neon">ネオンサイバー</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label for="animation-toggle">演出</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="animation-toggle" checked aria-label="演出のON/OFF">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="weight-toggle">重み付け</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="weight-toggle" aria-label="重み付けのON/OFF">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="history-toggle">履歴</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="history-toggle" checked aria-label="履歴のON/OFF">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <label for="test-toggle">テストモード</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="test-toggle" aria-label="テストモードのON/OFF">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑧ デバッグ（テストモード時のみ） -->
+    <section id="debug-section" class="debug-section hidden" aria-label="デバッグ">
+      <h2>デバッグログ</h2>
+      <pre id="debug-log" class="debug-log" role="log"></pre>
+      <button id="clear-debug-btn" class="btn btn-secondary" aria-label="デバッグログをクリア">ログクリア</button>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="./">ホーム</a></li>
+        <li><a href="./guide.html">使い方</a></li>
+        <li><a href="./guide.html#faq">よくある質問</a></li>
+        <li><a href="./privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+
+    <p class="copyright">&copy; 2026 ルーレット・くじ引きアプリ. All rights reserved.</p>
+
+    <!-- 広告枠（ページ最下部・UIの外） -->
+    <div class="ad-container">
+      <!-- AD_PLACEHOLDER: Google AdSense code will be inserted here -->
+      <div class="ad-placeholder ad-responsive" aria-hidden="true">
+        <p>広告スペース</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./main.js"></script>
+</body>
+</html>

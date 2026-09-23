@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://youheioonuki.github.io/web-roulette/sitemap.xml
