@@ -26,7 +26,7 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 
 ### SEO・AdSense対応
 - **SEO最適化**: meta description、Open Graph（共有用画像つき）、Twitter Card、JSON-LD構造化データ（WebApplication + FAQPage）
-- **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・お問い合わせ・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、robots.txt、sitemap.xml
+- **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、robots.txt、sitemap.xml
 - **広告枠**: ルーレットの操作を邪魔しないよう、各ページの最下部に1か所
 
 ## ファイル構成
@@ -37,7 +37,7 @@ default/
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
 ├── guide.html            # 使い方ガイド・よくある質問
-├── about.html            # 運営者情報・お問い合わせ・免責事項
+├── about.html            # 運営者情報・免責事項
 ├── privacy-policy.html   # プライバシーポリシー（AdSense必須）
 ├── favicon.svg           # ファビコン
 ├── og-image.png          # SNS共有用画像（1200x630）
@@ -93,7 +93,8 @@ python -m http.server 8000
 ## AdSense 審査対策チェックリスト
 
 - [x] プライバシーポリシー（`privacy-policy.html`）
-- [x] 運営者情報・お問い合わせ・免責事項（`about.html`）
+- [x] 運営者情報・免責事項（`about.html`）
+- [ ] お問い合わせ窓口（現在は未設置。審査で求められたら追加）
 - [x] 全ページ共通のナビゲーション
 - [x] 十分なテキストコンテンツ（使い方ガイド + FAQ）
 - [x] robots.txt / sitemap.xml
