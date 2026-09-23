@@ -26,7 +26,7 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 
 ### SEO・AdSense対応
 - **SEO最適化**: meta description、Open Graph（共有用画像つき）、Twitter Card、JSON-LD構造化データ（WebApplication + FAQPage）
-- **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、robots.txt、sitemap.xml
+- **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、sitemap.xml
 - **広告枠**: ルーレットの操作を邪魔しないよう、各ページの最下部に1か所
 
 ## ファイル構成
@@ -41,7 +41,6 @@ web-roulette/
 ├── privacy-policy.html   # プライバシーポリシー（AdSense必須）
 ├── favicon.svg           # ファビコン
 ├── og-image.png          # SNS共有用画像（1200x630）
-├── robots.txt            # クローラー向け指示
 ├── sitemap.xml           # サイトマップ
 ├── .gitignore            # 秘密情報・退避コピーの除外設定
 └── README.md             # このファイル
@@ -63,22 +62,20 @@ xdg-open index.html    # Linux
 python -m http.server 8000
 ```
 
-## GitHub Pages での公開手順
+## 公開 URL と構成
 
-### 方法1: main ブランチ直接公開
+公開 URL: **https://yorozu-works.com/web-roulette/**
 
-1. GitHub のリポジトリページで **Settings** → **Pages** を開く
-2. **Source** を `Deploy from a branch` に設定
-3. **Branch** を `main`、フォルダを `/ (root)` に設定
-4. **Save** をクリック
-5. 数分後に `https://youheioonuki.github.io/web-roulette/` で公開
+独自ドメイン `yorozu-works.com` は、ユーザーサイト用リポジトリ `youheioonuki.github.io` に設定しています。
+GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは自動で `yorozu-works.com/<リポジトリ名>/` で配信されます。
+このリポジトリ自体には独自ドメインの設定（CNAME）は不要です。
 
-### 方法2: docs フォルダで公開
+- `robots.txt` は検索エンジンがドメイン直下のものしか読まないため、`youheioonuki.github.io` リポジトリ側で管理し、このツールの `sitemap.xml` をそこに登録しています。
+- フッターの「yorozu-works トップ」は相対パス `../` なので、ドメインが変わっても動きます。
 
-1. `docs/` フォルダを作成し、全HTMLファイル + CSS + JS + robots.txt + sitemap.xml をコピー
-2. **Settings** → **Pages** でフォルダを `/docs` に設定
-
-> すべてのファイル参照は相対パスのため、どちらの方法でも動作します。
+### このリポジトリの Pages 設定
+1. **Settings** → **Pages** を開く
+2. **Source** を `Deploy from a branch`、**Branch** を `main` / `/ (root)` にして **Save**
 
 ## 広告枠について
 
@@ -97,8 +94,8 @@ python -m http.server 8000
 - [ ] お問い合わせ窓口（現在は未設置。審査で求められたら追加）
 - [x] 全ページ共通のナビゲーション
 - [x] 十分なテキストコンテンツ（使い方ガイド + FAQ）
-- [x] robots.txt / sitemap.xml
-- [ ] 独自ドメイン（任意。審査で有利になることがある）
+- [x] sitemap.xml（robots.txt はドメイン直下で管理）
+- [x] 独自ドメイン（yorozu-works.com）
 
 ## SEO対策チェックリスト
 
@@ -108,7 +105,7 @@ python -m http.server 8000
 - [x] canonical URL
 - [x] セマンティックHTML（nav, main, section, article, header, footer）
 - [x] ARIA属性（aria-label, aria-live, role）
-- [x] robots.txt + sitemap.xml
+- [x] sitemap.xml（robots.txt はドメイン直下で管理）
 - [x] レスポンシブデザイン
 
 ## 今後追加予定の機能
