@@ -191,6 +191,9 @@
   padding: 0;
 }
 
+/* hidden属性をdisplay指定より優先させる */
+[hidden] { display: none !important; }
+
 body {
   font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif;
   background-color: var(--bg-primary);
@@ -371,6 +374,7 @@ body {
    候補一覧
    =========================== */
 .candidate-list {
+  position: relative; /* 項目の offsetTop をリスト基準にするため */
   list-style: none;
   max-height: 280px;
   overflow-y: auto;
@@ -898,3 +902,14 @@ select {
     min-height: 50px;
   }
 }
+
+/* 運営者情報の項目リスト（FAQの「Q.」を付けない版） */
+.info-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.2rem;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.88rem;
+}
+.info-list dt { font-weight: 600; color: var(--text-primary); }
+.info-list dd { margin: 0; color: var(--text-secondary); }
