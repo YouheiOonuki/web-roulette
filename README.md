@@ -64,14 +64,14 @@ python -m http.server 8000
 
 ## 公開 URL と構成
 
-公開 URL: **https://yorozu-works.com/web-roulette/**
+公開 URL: **https://yorozu-craft.com/web-roulette/**
 
-独自ドメイン `yorozu-works.com` は、ユーザーサイト用リポジトリ `youheioonuki.github.io` に設定しています。
-GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは自動で `yorozu-works.com/<リポジトリ名>/` で配信されます。
+独自ドメイン `yorozu-craft.com` は、ユーザーサイト用リポジトリ `youheioonuki.github.io` に設定しています。
+GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは自動で `yorozu-craft.com/<リポジトリ名>/` で配信されます。
 このリポジトリ自体には独自ドメインの設定（CNAME）は不要です。
 
 - `robots.txt` は検索エンジンがドメイン直下のものしか読まないため、`youheioonuki.github.io` リポジトリ側で管理し、このツールの `sitemap.xml` をそこに登録しています。
-- フッターの「yorozu-works トップ」は相対パス `../` なので、ドメインが変わっても動きます。
+- フッターの「yorozu-craft トップ」は相対パス `../` なので、ドメインが変わっても動きます。
 
 ### このリポジトリの Pages 設定
 1. **Settings** → **Pages** を開く
@@ -95,7 +95,7 @@ GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは�
 - [x] 全ページ共通のナビゲーション
 - [x] 十分なテキストコンテンツ（使い方ガイド + FAQ）
 - [x] sitemap.xml（robots.txt はドメイン直下で管理）
-- [x] 独自ドメイン（yorozu-works.com）
+- [x] 独自ドメイン（yorozu-craft.com）
 
 ## SEO対策チェックリスト
 
