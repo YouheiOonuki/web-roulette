@@ -37,8 +37,8 @@ web-roulette/
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
 ├── guide.html            # 使い方ガイド・よくある質問
-├── about.html            # 運営者情報・免責事項
-├── privacy-policy.html   # プライバシーポリシー（AdSense必須）
+├── about.html            # yorozu-craft 共通の運営者情報（../about.html）へ移動する案内ページ
+├── privacy-policy.html   # yorozu-craft 共通のプライバシーポリシー（../privacy-policy.html）へ移動する案内ページ
 ├── favicon.svg           # ファビコン
 ├── og-image.png          # SNS共有用画像（1200x630）
 ├── sitemap.xml           # サイトマップ
@@ -89,8 +89,7 @@ GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは�
 
 ## AdSense 審査対策チェックリスト
 
-- [x] プライバシーポリシー（`privacy-policy.html`）
-- [x] 運営者情報・免責事項（`about.html`）
+- [x] プライバシーポリシー・運営者情報・免責事項（yorozu-craft 共通ページ `../privacy-policy.html#web-roulette` / `../about.html#web-roulette`）
 - [ ] お問い合わせ窓口（現在は未設置。審査で求められたら追加）
 - [x] 全ページ共通のナビゲーション
 - [x] 十分なテキストコンテンツ（使い方ガイド + FAQ）
