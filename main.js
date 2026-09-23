@@ -359,9 +359,7 @@
     var results = weightedRandomPickMultiple(count);
     if (results.length === 0) return;
 
-    isSpinning = true;
-    dom.startBtn.disabled = true;
-    dom.shuffleBtn.disabled = true;
+    setSpinning(true);
     dom.resultDisplay.classList.add('hidden');
     dom.rouletteDisplay.classList.remove('decided');
     clearAllHighlights();
@@ -420,6 +418,7 @@
         var items = dom.candidateList.querySelectorAll('.candidate-item');
         if (items[curOrigIdx]) {
           items[curOrigIdx].classList.add('highlight');
+          scrollListTo(items[curOrigIdx]);
         }
 
         dom.rouletteText.textContent = available[curAvailIdx].candidate.name;
@@ -470,11 +469,38 @@
     showResults(results);
     addHistoryEntry(results);
 
-    isSpinning = false;
-    dom.startBtn.disabled = false;
-    dom.shuffleBtn.disabled = false;
+    setSpinning(false);
 
     debugLog('演出終了');
+  }
+
+  // 回転中は候補や設定を変更できないようにロックする
+  // （途中で候補が増減すると結果とハイライトの位置がずれるため）
+  var SPIN_LOCK_SELECTOR =
+    '.input-section button, .input-section input, .input-section textarea, .input-section select,' +
+    '.candidate-list button, .candidate-list select, #select-count, #weight-toggle';
+
+  function setSpinning(on) {
+    isSpinning = on;
+    dom.startBtn.disabled = on;
+    dom.shuffleBtn.disabled = on;
+    var controls = document.querySelectorAll(SPIN_LOCK_SELECTOR);
+    for (var i = 0; i < controls.length; i++) {
+      controls[i].disabled = on;
+    }
+  }
+
+  // 候補一覧の枠内だけをスクロールして、ハイライト中の候補を見える位置に保つ
+  // （scrollIntoView はページ全体まで動かしてしまうため使わない）
+  function scrollListTo(item) {
+    var list = dom.candidateList;
+    var top = item.offsetTop;
+    var bottom = top + item.offsetHeight;
+    if (top < list.scrollTop) {
+      list.scrollTop = top;
+    } else if (bottom > list.scrollTop + list.clientHeight) {
+      list.scrollTop = bottom - list.clientHeight;
+    }
   }
 
   // 中間結果表示（確定済みの結果のみ表示）
@@ -618,6 +644,12 @@
   // ===========================
 
   function applySettings() {
+    // テストモードは開発者向け。URLに ?debug=1 があるときだけ切り替えを表示し、
+    // それ以外では保存値が残っていても強制的にOFFにする
+    var debugAllowed = /[?&]debug=1(&|$)/.test(location.search);
+    document.getElementById('test-setting').hidden = !debugAllowed;
+    if (!debugAllowed) settings.testMode = false;
+
     dom.themeSelect.value = settings.theme;
     dom.animationToggle.checked = settings.animation;
     dom.weightToggle.checked = settings.weightEnabled;
@@ -760,6 +792,15 @@
 
     dom.clearDebugBtn.addEventListener('click', function () {
       dom.debugLog.textContent = '';
+    });
+
+    // Space / Enter でスタート（入力欄やボタン操作中は本来の動作を優先）
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== ' ' && e.key !== 'Enter') return;
+      if (e.isComposing || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.target.closest('input, textarea, select, button, a')) return;
+      e.preventDefault();
+      dom.startBtn.click();
     });
 
     dom.candidateInput.addEventListener('keydown', function (e) {

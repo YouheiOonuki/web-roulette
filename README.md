@@ -21,23 +21,29 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 - **重み付け（ON/OFF）**: 各候補に 1〜3 の重みを設定可能
 - **6種類のテーマ**: 和紙風 / 森 / 藍染 / ダーク / メタル / ネオンサイバー
 - **履歴（ON/OFF）**: 過去10回の結果をローカル保存
-- **テストモード**: 乱数固定、アニメーション高速化、デバッグログ表示
+- **キーボード操作**: 入力欄の外で Space / Enter を押すとスタート
+- **テストモード（開発者向け）**: URL に `?debug=1` を付けたときだけ表示。乱数固定、アニメーション高速化、デバッグログ表示
 
 ### SEO・AdSense対応
-- **SEO最適化**: meta description、Open Graph、Twitter Card、JSON-LD構造化データ（WebApplication + FAQPage）
-- **AdSense審査対応**: プライバシーポリシー、ナビゲーション、使い方ガイド、FAQ、robots.txt、sitemap.xml
-- **広告枠**: コンテンツ間（728x90）とフッター上（300x250）の2箇所にプレースホルダー
+- **SEO最適化**: meta description、Open Graph（共有用画像つき）、Twitter Card、JSON-LD構造化データ（WebApplication + FAQPage）
+- **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、robots.txt、sitemap.xml
+- **広告枠**: ルーレットの操作を邪魔しないよう、各ページの最下部に1か所
 
 ## ファイル構成
 
 ```
-default/
+web-roulette/
 ├── index.html            # メインHTML（SEOメタタグ・構造化データ含む）
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
+├── guide.html            # 使い方ガイド・よくある質問
+├── about.html            # 運営者情報・免責事項
 ├── privacy-policy.html   # プライバシーポリシー（AdSense必須）
+├── favicon.svg           # ファビコン
+├── og-image.png          # SNS共有用画像（1200x630）
 ├── robots.txt            # クローラー向け指示
 ├── sitemap.xml           # サイトマップ
+├── .gitignore            # 秘密情報・退避コピーの除外設定
 └── README.md             # このファイル
 ```
 
@@ -45,8 +51,8 @@ default/
 
 ```bash
 # クローン
-git clone https://github.com/YouheiOonuki/default.git
-cd default
+git clone https://github.com/YouheiOonuki/web-roulette.git
+cd web-roulette
 
 # ブラウザで開く
 open index.html        # macOS
@@ -65,7 +71,7 @@ python -m http.server 8000
 2. **Source** を `Deploy from a branch` に設定
 3. **Branch** を `main`、フォルダを `/ (root)` に設定
 4. **Save** をクリック
-5. 数分後に `https://youheioonuki.github.io/default/` で公開
+5. 数分後に `https://youheioonuki.github.io/web-roulette/` で公開
 
 ### 方法2: docs フォルダで公開
 
@@ -76,33 +82,28 @@ python -m http.server 8000
 
 ## 広告枠について
 
-`index.html` に2箇所の広告プレースホルダーがあります。
+`index.html` と `guide.html` の最下部（フッターの下）に広告プレースホルダーが1か所ずつあります。
 
-### 上部（コンテンツ間・リーダーボード 728x90）
 ```html
-<!-- AD_PLACEHOLDER_TOP: Google AdSense code will be inserted here -->
+<!-- AD_PLACEHOLDER: Google AdSense code will be inserted here -->
 ```
 
-### 下部（フッター上・レクタングル 300x250）
-```html
-<!-- AD_PLACEHOLDER_BOTTOM: Google AdSense code will be inserted here -->
-```
-
-対応する `.ad-placeholder` の `<div>` を AdSense のコードに差し替えてください。
+このコメントの直後にある `.ad-placeholder` の `<div>` を AdSense のコードに差し替えてください。
 
 ## AdSense 審査対策チェックリスト
 
-- [x] プライバシーポリシーページ (`privacy-policy.html`)
-- [x] ナビゲーション（ヘッダー + フッター）
+- [x] プライバシーポリシー（`privacy-policy.html`）
+- [x] 運営者情報・免責事項（`about.html`）
+- [ ] お問い合わせ窓口（現在は未設置。審査で求められたら追加）
+- [x] 全ページ共通のナビゲーション
 - [x] 十分なテキストコンテンツ（使い方ガイド + FAQ）
-- [x] 複数ページ構成
 - [x] robots.txt / sitemap.xml
-- [x] 適切な広告枠サイズ（728x90 + 300x250）
+- [ ] 独自ドメイン（任意。審査で有利になることがある）
 
 ## SEO対策チェックリスト
 
 - [x] title / meta description（キーワード最適化済み）
-- [x] Open Graph / Twitter Card メタタグ
+- [x] Open Graph / Twitter Card メタタグ（共有用画像 og-image.png）
 - [x] JSON-LD構造化データ（WebApplication + FAQPage）
 - [x] canonical URL
 - [x] セマンティックHTML（nav, main, section, article, header, footer）
