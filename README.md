@@ -31,7 +31,7 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 ## ファイル構成
 
 ```
-web-roulette/
+default/
 ├── index.html            # メインHTML（SEOメタタグ・構造化データ含む）
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
@@ -45,8 +45,8 @@ web-roulette/
 
 ```bash
 # クローン
-git clone https://github.com/YouheiOonuki/web-roulette.git
-cd web-roulette
+git clone https://github.com/YouheiOonuki/default.git
+cd default
 
 # ブラウザで開く
 open index.html        # macOS
@@ -65,7 +65,7 @@ python -m http.server 8000
 2. **Source** を `Deploy from a branch` に設定
 3. **Branch** を `main`、フォルダを `/ (root)` に設定
 4. **Save** をクリック
-5. 数分後に `https://youheioonuki.github.io/web-roulette/` で公開
+5. 数分後に `https://youheioonuki.github.io/default/` で公開
 
 ### 方法2: docs フォルダで公開
 
