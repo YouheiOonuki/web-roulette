@@ -36,6 +36,8 @@ web-roulette/
 ├── index.html            # メインHTML（SEOメタタグ・構造化データ含む）
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
+├── backup.js             # 候補・設定・履歴のファイルへの書き出し・読み込み（純粋関数）
+├── tests/backup.test.js  # backup.js のテスト（node --test tests/*.test.js）
 ├── guide.html            # 使い方ガイド・よくある質問
 ├── about.html            # yorozu-craft 共通の運営者情報（../about.html）へ移動する案内ページ
 ├── privacy-policy.html   # yorozu-craft 共通のプライバシーポリシー（../privacy-policy.html）へ移動する案内ページ
