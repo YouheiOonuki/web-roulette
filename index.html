@@ -138,6 +138,16 @@
         <button id="reset-btn" class="btn btn-danger" aria-label="候補をすべて削除">候補をリセット</button>
         <button id="preset-btn" class="btn btn-secondary" aria-label="プリセット候補に戻す">プリセットに戻す</button>
       </div>
+
+      <div class="input-group" role="group" aria-labelledby="backup-heading">
+        <label id="backup-heading">バックアップ（候補・設定・履歴）</label>
+        <div class="input-group-buttons">
+          <button id="backup-export" class="btn btn-secondary">ファイルに書き出す</button>
+          <button id="backup-import" class="btn btn-secondary">ファイルから読み込む</button>
+          <input type="file" id="backup-file" accept=".json,application/json" hidden>
+        </div>
+        <p class="file-hint" id="backup-msg" aria-live="polite"></p>
+      </div>
     </section>
 
     <!-- ④ 履歴 -->
@@ -223,6 +233,7 @@
     <!-- AD_PLACEHOLDER: 広告の位置を指定する場合はここに AdSense の広告ユニットを入れる（今は全ページの <head> のタグによる自動広告） -->
   </footer>
 
+  <script src="./backup.js"></script>
   <script src="./main.js"></script>
   <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

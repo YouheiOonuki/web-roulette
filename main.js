@@ -15,6 +15,7 @@
 
   var DEFAULT_CANDIDATES = ['カレー', 'ラーメン', '寿司', '焼肉', 'パスタ'];
   var MAX_HISTORY = 10;
+  var TOOL = 'web-roulette';
 
   // --- DOM要素 ---
   var dom = {
@@ -45,6 +46,10 @@
     debugSection: document.getElementById('debug-section'),
     debugLog: document.getElementById('debug-log'),
     clearDebugBtn: document.getElementById('clear-debug-btn'),
+    backupExportBtn: document.getElementById('backup-export'),
+    backupImportBtn: document.getElementById('backup-import'),
+    backupFile: document.getElementById('backup-file'),
+    backupMsg: document.getElementById('backup-msg'),
   };
 
   // --- 状態 ---
@@ -792,6 +797,57 @@
 
     dom.clearDebugBtn.addEventListener('click', function () {
       dom.debugLog.textContent = '';
+    });
+
+    // --- ファイルへの書き出し・読み込み（README「ツールを追加するとき」20。決定 D31） ---
+    // 中身はこの端末の中で作り、どこにも送信しない。機種変更のときはファイルを移して読み込む
+    dom.backupExportBtn.addEventListener('click', function () {
+      var data = { candidates: candidates, settings: settings, history: history };
+      var blob = new Blob([JSON.stringify(window.Backup.buildBackup(TOOL, data), null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = window.Backup.backupFileName(TOOL);
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      dom.backupMsg.textContent = 'ファイルに書き出しました。機種変更のときは、このファイルを新しい端末に移して「ファイルから読み込む」を押してください。';
+    });
+
+    dom.backupImportBtn.addEventListener('click', function () {
+      if (isSpinning) return;
+      dom.backupFile.click();
+    });
+
+    dom.backupFile.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      dom.backupFile.value = '';
+      if (!file) return;
+      if (file.size > 1024 * 1024) {
+        dom.backupMsg.textContent = 'ファイルが大きすぎます。このツールで書き出したファイルを選んでください。';
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var r = window.Backup.parseBackup(event.target.result, TOOL, ['candidates']);
+        if (!r.ok) { dom.backupMsg.textContent = r.error; return; }
+        if (!confirm('ファイルの内容で、今の候補・設定・履歴を置き換えます。よろしいですか？')) return;
+        var themes = Array.prototype.map.call(dom.themeSelect.options, function (o) { return o.value; });
+        candidates = window.Backup.normalizeCandidates(r.data.candidates);
+        settings = window.Backup.normalizeSettings(r.data.settings, settings, themes);
+        history = window.Backup.normalizeHistory(r.data.history);
+        saveCandidates();
+        saveSettings();
+        saveHistory();
+        applySettings();
+        renderCandidates();
+        renderHistory();
+        updateSelectCountMax();
+        dom.resultDisplay.classList.add('hidden');
+        dom.rouletteText.textContent = 'スタートを押してください';
+        dom.backupMsg.textContent = 'ファイルから読み込みました（候補 ' + candidates.length + '件）。';
+        debugLog('ファイルから読み込み: 候補 ' + candidates.length + '件');
+      };
+      reader.onerror = function () { dom.backupMsg.textContent = 'ファイルを読み取れませんでした。'; };
+      reader.readAsText(file);
     });
 
     // Space / Enter でスタート（入力欄やボタン操作中は本来の動作を優先）
