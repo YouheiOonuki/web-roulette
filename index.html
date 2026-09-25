@@ -74,6 +74,8 @@
     <p class="subtitle">候補を入れて「スタート」を押すだけ！登録不要・完全無料</p>
   </header>
 
+  <p class="sibling-links"><a href="./amida/">あみだくじ</a> ・ <a href="./odai/">お題の一覧</a> ・ <a href="./dice/">サイコロ・数字</a></p>
+
   <main class="app-main">
 
     <!-- ① ルーレット表示エリア（最上部） -->
@@ -132,6 +134,15 @@
           <input type="file" id="file-upload" accept=".txt" aria-label="テキストファイルから候補を読み込み">
           <p class="file-hint" id="delimiter-hint">区切り文字は上記の設定が適用されます</p>
         </div>
+      </div>
+
+      <div class="input-group">
+        <label for="odai-select">お題を読み込む（山手線ゲーム・王様ゲームなど）</label>
+        <div class="input-controls">
+          <select id="odai-select" aria-describedby="odai-hint"></select>
+          <button id="odai-btn" class="btn btn-secondary">読み込む</button>
+        </div>
+        <p class="file-hint" id="odai-hint">今の候補と入れかわります。中身は <a href="./odai/">お題の一覧</a> で見られます。</p>
       </div>
 
       <div class="input-group input-group-buttons">
@@ -234,6 +245,8 @@
   </footer>
 
   <script src="./backup.js"></script>
+  <script src="./odai.js"></script>
+  <script src="./amida.js"></script>
   <script src="./main.js"></script>
   <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

@@ -29,6 +29,16 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 - **AdSense審査対応**: 使い方ガイド・FAQ、運営者情報・免責事項、プライバシーポリシー、全ページ共通のナビゲーション、sitemap.xml
 - **広告**: 全ページの `<head>` の AdSense タグによる自動広告。空の広告枠は置かない
 
+### あみだくじ・お題・小道具（2026-09-25 追加。yorozu-plans の企画書 31、K97・K98）
+- **あみだくじ** `/web-roulette/amida/`: 名前（空なら人数）と結果（当たり 1〜3 本・順番・自分で書く）から作る。名前を押すと線をたどるアニメーション、全員の結果、A4 縦の印刷（名前と結果を入れる／結果を折って隠す／線だけ）、共有リンク（`#s=`、名前・結果・くじ番号）。2〜20 人
+  - **偏らない作り方**: 先に「だれがどの列に着くか」の並びを n! 通りが同じ確率になるように決め（Fisher–Yates）、その並びを隣どうしの入れ替え（横線）に分けて描く。打ち消し合う 2 本の飾りの横線を足して混ぜる。結果を下のどの列に置くかもくじ。横線をでたらめに引く作り方は、縦 5 本・横 10 本で左はし→左はしが 33.6%（公平なら 20%）に偏る（`amida.js` の `naiveEndProbs` で計算。使い方ページ `amida/guide.html` に書いた数字）
+  - 保存キー `web-roulette_amida`。書き出しのファイルはルーレットと同じ形で、`data.amida` に入る（どちらのページでも読み込める）
+- **お題の一覧** `/web-roulette/odai/`: 山手線ゲーム（小学生／中学生〜）、子ども向けの王様ゲームの命令、やさしい罰ゲーム、川柳・俳句、お絵かき、トークテーマ、サイコロ・コイン・じゃんけん。中身は `odai.js` の 1 か所で、ページの一覧は `node tools/build-odai.cjs` で作り直す（テストが一致を確かめる）。ルーレットの「お題を読み込む」と `/web-roulette/#odai=<id>` で候補に入る。恋愛・体にふれる・診断・占いは載せない（テストで禁止語を確かめる）
+- **サイコロ・数字** `/web-roulette/dice/`: サイコロ 1〜10 個（合計つき）、コイントス、4 桁・6 桁・1〜100・範囲の数字（重なりなしも）。`crypto.getRandomValues` と、割り切れない端を捨てる引き直しで、どの数も同じ確率（`dice.js`）
+- 新しいページの見た目は `kit.css`（toban と同じ和紙色・ダークモード自動）と `screen.js`。ルーレット本体は今までどおり `style.css` の 6 テーマ
+- 印刷のクレジットの着地ページ `print/`（noindex、sitemap に載せない）
+- テスト: `node --test tests/*.test.js`（`.github/workflows/test.yml` で push のたびに実行）
+
 ## ファイル構成
 
 ```
@@ -37,7 +47,16 @@ web-roulette/
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
 ├── backup.js             # 候補・設定・履歴のファイルへの書き出し・読み込み（純粋関数）
-├── tests/backup.test.js  # backup.js のテスト（node --test tests/*.test.js）
+├── tests/*.test.js       # backup.js・amida.js・odai.js・dice.js のテスト（node --test tests/*.test.js）
+├── amida.js              # あみだくじのロジック（純粋関数）
+├── amida/                # あみだくじのページ（index.html・amida-ui.js・guide.html）
+├── odai.js               # お題の一覧（ルーレットと odai/ が読む）
+├── odai/index.html       # お題の一覧ページ（一覧は tools/build-odai.cjs が作る）
+├── dice.js               # サイコロ・コイン・数字（純粋関数）
+├── dice/index.html       # サイコロ・数字のページ
+├── print/index.html      # 印刷物のクレジットの着地ページ（noindex）
+├── kit.css / screen.js   # 新しいページの共通 CSS・固定バーなどの部品（toban と同じもの）
+├── tools/build-odai.cjs  # odai.js から odai/index.html の一覧を作る
 ├── guide.html            # 使い方ガイド・よくある質問
 ├── about.html            # yorozu-craft 共通の運営者情報（../about.html）へ移動する案内ページ
 ├── privacy-policy.html   # yorozu-craft 共通のプライバシーポリシー（../privacy-policy.html）へ移動する案内ページ

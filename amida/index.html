@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あみだくじ作成｜無料・印刷・共有リンク、偏りのない作り方（登録なし）｜yorozu-craft</title>
+  <meta name="description" content="名前と結果を入れるだけで、あみだくじを作成。線をたどるアニメーション、全員の結果、A4 印刷（結果を折って隠す形・線だけも）、同じくじの共有リンク。横線の本数で結果が偏らない作り方。登録なし・無料。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/web-roulette/amida/">
+
+  <meta property="og:title" content="あみだくじ作成｜yorozu-craft">
+  <meta property="og:description" content="名前と結果を入れるだけで、あみだくじを作成。線をたどるアニメーション、A4 印刷、共有リンク。横線の本数で結果が偏らない作り方。登録なし・無料。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/web-roulette/amida/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/web-roulette/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "あみだくじ作成",
+    "description": "名前と結果を入れるだけで、あみだくじを作成。線をたどるアニメーション、A4 印刷、共有リンク。登録なし・無料。",
+    "url": "https://yorozu-craft.com/web-roulette/amida/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "inLanguage": "ja"
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../kit.css">
+</head>
+<body>
+
+  <nav class="sibling-nav" aria-label="このツールのページ">
+    <a href="../">ルーレット</a>
+    <a href="./" aria-current="page">あみだくじ</a>
+    <a href="../odai/">お題</a>
+    <a href="../dice/">サイコロ・数字</a>
+  </nav>
+
+  <header class="app-header">
+    <h1>あみだくじを作る</h1>
+    <p class="subtitle">名前と結果を入れると、偏りのないあみだくじができます。<br>入力は外部に送信しません。</p>
+  </header>
+
+  <main class="app-main">
+
+    <div id="shared-banner" class="card notice" hidden>
+      <p id="shared-msg">共有されたあみだくじです。上の名前を押すと線をたどります。</p>
+      <p class="btn-row"><a class="btn btn-sub" href="./">自分のあみだくじを新しく作る</a></p>
+    </div>
+
+    <fieldset class="card req" id="inputs">
+      <legend>くじの中身</legend>
+      <div class="field">
+        <label for="names">参加する人（1 行に 1 人）</label>
+        <textarea id="names" rows="3" spellcheck="false" placeholder="例：&#10;青木&#10;井上&#10;上田"></textarea>
+        <p class="hint">空なら人数ぶんの番号（1, 2, 3 …）で作ります。20 人まで。</p>
+      </div>
+      <div class="inline">
+        <div class="field" id="count-field">
+          <label for="count">人数</label>
+          <input type="number" id="count" inputmode="numeric" min="2" max="20" value="5">
+        </div>
+        <div class="field">
+          <label for="kind">結果</label>
+          <select id="kind">
+            <option value="atari1">当たり 1 本</option>
+            <option value="atari2">当たり 2 本</option>
+            <option value="atari3">当たり 3 本</option>
+            <option value="order">順番（1番〜）</option>
+            <option value="custom">自分で書く</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="custom-field" hidden>
+        <label for="custom">結果（1 行に 1 つ）</label>
+        <textarea id="custom" rows="3" spellcheck="false" placeholder="例：&#10;買い出し&#10;片付け&#10;司会"></textarea>
+        <p class="hint">人数より少ない分は「はずれ」になります。</p>
+      </div>
+      <p id="input-info" class="small" aria-live="polite"></p>
+    </fieldset>
+
+    <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
+      <h2 id="h-result">あみだくじ</h2>
+      <p class="tap-hint" id="tap-hint">上の名前を押すと、線をたどって結果が出ます。</p>
+      <div class="ladder-wrap">
+        <div class="ladder" id="ladder"></div>
+      </div>
+      <div class="btn-row">
+        <button type="button" id="reveal-all" class="btn">全員の結果を見る</button>
+        <button type="button" id="reroll" class="btn btn-sub">くじを作り直す</button>
+        <button type="button" id="print" class="btn btn-sub">印刷する</button>
+      </div>
+      <div id="result-main" aria-live="polite">
+        <ul id="all-results" class="all-results"></ul>
+      </div>
+      <p class="small"><span id="seed-label"></span> ・ <a href="./guide.html#fair">偏らない作り方</a> ・ <a href="../../print-help.html">スマホで印刷するには →</a></p>
+    </section>
+
+    <div class="opts" id="opts">
+      <details class="card opt" id="opt-lines">
+        <summary>横線: <span class="opt-state"></span></summary>
+        <div class="field">
+          <label for="density">横線の多さ</label>
+          <select id="density">
+            <option value="few">少なめ</option>
+            <option value="normal" selected>ふつう</option>
+            <option value="many">多め</option>
+          </select>
+          <p class="hint">多さを変えても、どの結果になりやすいかは変わりません。</p>
+        </div>
+        <label class="check"><input type="checkbox" id="hide-rungs"> たどるまで横線を隠す</label>
+      </details>
+
+      <details class="card opt" id="opt-print">
+        <summary>印刷: <span class="opt-state"></span></summary>
+        <div class="field">
+          <label for="title">見出し</label>
+          <input type="text" id="title" maxlength="40" placeholder="例：買い出し係を決める">
+        </div>
+        <fieldset class="plain">
+          <legend>紙の形（A4 縦）</legend>
+          <div class="seg">
+            <label><input type="radio" name="pmode" value="full" checked> 名前と結果を入れる</label>
+            <label><input type="radio" name="pmode" value="fold"> 結果を下に折って隠す</label>
+            <label><input type="radio" name="pmode" value="blank"> 線だけ（名前と結果は手で書く）</label>
+          </div>
+        </fieldset>
+        <label class="check"><input type="checkbox" id="print-credit" checked> 紙の下に「yorozu-craft.com/web-roulette/print/ で作成」と小さく入れる</label>
+      </details>
+    </div>
+
+    <details class="card opt no-print" id="file-box">
+      <summary>共有・保存</summary>
+      <p class="hint">リンクには名前・結果・くじ番号が入ります。開いた人にも同じあみだくじが出ます。</p>
+      <div class="btn-row">
+        <button type="button" id="share" class="btn btn-sub">共有リンクをコピー</button>
+      </div>
+      <p id="share-msg" class="small" aria-live="polite"></p>
+      <input type="text" id="share-url" class="share-url" readonly hidden aria-label="共有リンク">
+      <p class="small">入力はこの端末のブラウザ（localStorage、キー <code>web-roulette_amida</code>）にだけ保存され、外部には送信されません。書き出し・読み込みはこの画面のボタンから。</p>
+      <div class="btn-row">
+        <button type="button" id="backup-export" class="btn btn-sub">ファイルに書き出す</button>
+        <button type="button" id="backup-import" class="btn btn-sub">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="backup-file" accept=".json,application/json" hidden>
+      <p id="backup-msg" class="small" aria-live="polite"></p>
+    </details>
+
+    <p class="small center"><a href="./guide.html">使い方・偏らない作り方・よくある質問</a></p>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">ルーレット</a></li>
+        <li><a href="./" aria-current="page">あみだくじ</a></li>
+        <li><a href="./guide.html">あみだくじの使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <div id="print-area" class="print-area" aria-hidden="true"></div>
+
+  <script src="../backup.js"></script>
+  <script src="../amida.js"></script>
+  <script src="../screen.js"></script>
+  <script src="./amida-ui.js"></script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

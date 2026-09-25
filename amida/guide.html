@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>あみだくじの使い方と、偏らない作り方｜印刷・共有・よくある質問｜yorozu-craft</title>
+  <meta name="description" content="あみだくじ作成ツールの使い方。横線をでたらめに引くと真下の結果に偏る理由と、このツールの偏らない作り方。A4 印刷（結果を折って隠す・線だけ）、共有リンク、データの扱い。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/web-roulette/amida/guide.html">
+
+  <meta property="og:title" content="あみだくじの使い方と、偏らない作り方｜yorozu-craft">
+  <meta property="og:description" content="横線をでたらめに引くと真下の結果に偏る理由と、このツールの偏らない作り方。A4 印刷、共有リンク。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://yorozu-craft.com/web-roulette/amida/guide.html">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/web-roulette/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- よくある質問（下の #faq と内容をそろえる） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "あみだくじは公平ですか？横線の数で偏りますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "横線をでたらめに引く作り方は、本数が少ないと真下に近い結果に偏ります。このツールは先に全員の結果を公平に決めてから横線を引くので、本数を変えても偏りません。" }
+      },
+      {
+        "@type": "Question",
+        "name": "あみだくじを印刷して紙で使うには？",
+        "acceptedAnswer": { "@type": "Answer", "text": "「印刷」で紙の形を選んで「印刷する」を押します。結果を下に折って隠す形と、名前と結果を手で書く線だけの形があります。" }
+      },
+      {
+        "@type": "Question",
+        "name": "あみだくじを LINE でみんなに送れますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "「共有・保存」の「共有リンクをコピー」で作ったリンクを送ると、開いた人にも同じあみだくじが出ます。リンクには名前と結果が入ります。" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../kit.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>あみだくじの使い方と、偏らない作り方</h1>
+    <p class="subtitle">使い方・しくみ・印刷・よくある質問・ご利用上の注意</p>
+  </header>
+
+  <main class="app-main">
+
+    <p class="card center"><a href="./">▶ あみだくじを作る</a></p>
+
+    <article class="card content" id="howto">
+      <h2>あみだくじの作り方</h2>
+      <ol>
+        <li>参加する人を 1 行に 1 人ずつ入れる（空なら人数だけ）</li>
+        <li>結果を選ぶ（当たり・順番・自分で書く）</li>
+        <li>上の名前を押して線をたどる</li>
+        <li>最後に「全員の結果を見る」</li>
+      </ol>
+      <p>結果を下のどこに置くかもくじで決めるので、「当たり」がいつも左はしにあるわけではありません。</p>
+    </article>
+
+    <article class="card content" id="fair">
+      <h2>あみだくじは公平？横線の数による偏り</h2>
+      <p>横線をでたらめに引く作り方は、本数が少ないと真下に近い結果に偏ります。このツールは先に全員の結果を公平に決め、その結果になるように横線を引くので、本数を変えても偏りません。</p>
+      <p>たとえば縦線 5 本に横線 10 本をでたらめな場所に引くと、左はしから始めて左はしに着く割合は 33.6%、右はしに着く割合は 7.1% です（公平なら どれも 20%）。20 本でも 24.9% 残ります。</p>
+      <details>
+        <summary>くわしいしくみと確かめ方</summary>
+        <p>1) だれがどの列に着くかの並び（5 人なら 120 通り）を、どれも同じ確率になるように決めます（Fisher–Yates のシャッフル）。2) その並びを、隣どうしの入れ替え（横線 1 本）に分けて描きます。3) 同じ間に 2 本で打ち消し合う横線を足し、並びが変わらない入れ替えで混ぜて、どの縦線にも横線がかかるようにします。飾りの横線は結果を変えません。</p>
+        <p>上の 33.6% などは、横線 1 本ごとに 4 つの間のどれかを同じ確率で選ぶとして、計算で出した値です（ほかのサイトの作り方を調べた数字ではありません）。</p>
+        <p>確かめたこと: 4 人の 24 通りが 24,000 回で同じ割合（カイ二乗検定）、5 人で左はしのスタートがどの列にも約 20%、2〜20 人で図をたどった結果と決めた並びが一致すること。くじ番号は約 43 億通りなので、13 人以上ではありうる並びのすべてが出るわけではありません。</p>
+      </details>
+    </article>
+
+    <article class="card content" id="print">
+      <h2>あみだくじを印刷して紙で使う</h2>
+      <ul>
+        <li><strong>名前と結果を入れる</strong>：画面と同じものを A4 縦に</li>
+        <li><strong>結果を下に折って隠す</strong>：点線で裏へ折ってから配ります。名前を入れていないときは空欄</li>
+        <li><strong>線だけ</strong>：上に名前、下に結果を手で書きます</li>
+      </ul>
+      <p>結果が隠れている間なら、みんなで横線を書き足しても偏りは出ません。</p>
+    </article>
+
+    <article class="card content" id="faq">
+      <h2>よくある質問</h2>
+      <dl class="faq">
+        <dt>あみだくじは公平ですか？横線の数で偏りますか？</dt>
+        <dd>横線をでたらめに引く作り方は、本数が少ないと真下に近い結果に偏ります。このツールは先に全員の結果を公平に決めてから横線を引くので、本数を変えても偏りません。</dd>
+        <dt>あみだくじを印刷して紙で使うには？</dt>
+        <dd>「印刷」で紙の形を選んで「印刷する」を押します。スマホからは<a href="../../print-help.html">スマホで印刷する</a>のページを見てください。</dd>
+        <dt>あみだくじを LINE でみんなに送れますか？</dt>
+        <dd>「共有リンクをコピー」で作ったリンクを送ると、開いた人にも同じあみだくじが出ます。リンクには名前と結果が入ります。</dd>
+      </dl>
+    </article>
+
+    <article class="card content" id="notes">
+      <h2>ご利用上の注意・データの扱い</h2>
+      <ul>
+        <li><strong>保存されるデータ</strong>：入力はこの端末のブラウザ（localStorage、キー <code>web-roulette_amida</code>）にだけ保存され、外部には送信されません。書き出し・読み込みは画面のボタンから</li>
+        <li><strong>共有リンク</strong>：名前と結果が「#」以降に入るので、サーバーには送られません。受け取った人（転送された人も）が読めます</li>
+        <li><strong>作る人</strong>：作った人は画面で結果を見られます。気になるときは、みんなの前で作るか、共有リンクで同じくじを確かめてください</li>
+      </ul>
+      <p><a href="https://docs.google.com/forms/d/e/1FAIpQLSd8B90qh5lEIyr25iw1jOjdQjOyaPZ1_z2wMB4kH-EmEeJYWw/viewform?usp=pp_url&amp;entry.585564634=web-roulette" target="_blank" rel="noopener">ご要望・不具合の報告（Google フォーム）</a>：いただいた内容をもとに直します。お返事はしていません。</p>
+      <p>サイト全体の運営者情報・免責事項は<a href="../../about.html">こちら</a>、プライバシーポリシーは<a href="../../privacy-policy.html">こちら</a>です（すべてのツールで共通）。</p>
+    </article>
+
+    <article class="card content" id="changelog">
+      <h2>更新履歴</h2>
+      <ul>
+        <li><time datetime="2026-09-25">2026年9月25日</time> 公開</li>
+      </ul>
+    </article>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">ルーレット</a></li>
+        <li><a href="./">あみだくじ</a></li>
+        <li><a href="./guide.html" aria-current="page">あみだくじの使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

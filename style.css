@@ -888,3 +888,14 @@ select {
 .content-section details { margin: 0.3rem 0 0.6rem; }
 .content-section details > summary { cursor: pointer; color: var(--accent); font-size: 0.85rem; }
 .content-section details[open] > summary { margin-bottom: 0.3rem; }
+
+/* ===========================
+   ほかのページ（あみだくじ・お題・サイコロ）へのリンクと、お題の読み込み（K98）
+   =========================== */
+.sibling-links { text-align: center; font-size: 0.88rem; margin: 0.6rem 1rem 0; color: var(--text-secondary); }
+.sibling-links a { color: var(--accent); display: inline-block; min-height: 32px; line-height: 32px; }
+.file-hint a { color: var(--accent); }
+#odai-select {
+  flex: 1; min-width: 0; padding: 0.45rem 0.5rem; font-size: 0.95rem;
+  border: 1px solid var(--input-border); border-radius: 6px; background: var(--input-bg); color: var(--text-primary);
+}
