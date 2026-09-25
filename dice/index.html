@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サイコロ（ブラウザ）・コイントス・ランダムな数字 4桁・6桁｜無料・登録なし｜yorozu-craft</title>
+  <meta name="description" content="ブラウザで振れるサイコロ（1〜10 個・合計つき）、コイントス、ランダムな数字（4 桁・6 桁・1〜100・範囲を決めて、重なりなしも）。アプリのインストールも登録もいりません。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://yorozu-craft.com/web-roulette/dice/">
+
+  <meta property="og:title" content="サイコロ・コイントス・ランダムな数字｜yorozu-craft">
+  <meta property="og:description" content="ブラウザで振れるサイコロ、コイントス、ランダムな数字（4 桁・6 桁・範囲）。登録なし・無料。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yorozu-craft.com/web-roulette/dice/">
+  <meta property="og:site_name" content="yorozu-craft">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:image" content="https://yorozu-craft.com/web-roulette/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+
+  <!-- Google AdSense（サイト所有確認 + 広告配信スクリプト） -->
+  <meta name="google-adsense-account" content="ca-pub-5375267956079717">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5375267956079717"
+     crossorigin="anonymous"></script>
+
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../kit.css">
+</head>
+<body>
+
+  <nav class="sibling-nav" aria-label="このツールのページ">
+    <a href="../">ルーレット</a>
+    <a href="../amida/">あみだくじ</a>
+    <a href="../odai/">お題</a>
+    <a href="./" aria-current="page">サイコロ・数字</a>
+  </nav>
+
+  <header class="app-header">
+    <h1>サイコロ・コイントス・ランダムな数字</h1>
+    <p class="subtitle">ボタンを押すと、その場で出ます。どの目も同じ確率です。</p>
+  </header>
+
+  <main class="app-main">
+
+    <section class="card" aria-labelledby="h-dice">
+      <h2 id="h-dice">サイコロ</h2>
+      <div class="inline">
+        <div class="field">
+          <label for="dice-n">個数</label>
+          <select id="dice-n">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+          </select>
+        </div>
+        <div class="field"><button type="button" id="dice-roll" class="btn btn-big">サイコロを振る</button></div>
+      </div>
+      <div id="result-dice" aria-live="polite">
+        <p class="big-out dice" id="dice-out">⚀</p>
+        <p class="out-sub" id="dice-sub">押すと振ります</p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-coin">
+      <h2 id="h-coin">コイントス</h2>
+      <div class="btn-row"><button type="button" id="coin-toss" class="btn btn-big">コインを投げる</button></div>
+      <div aria-live="polite">
+        <p class="big-out" id="coin-out">—</p>
+        <p class="out-sub" id="coin-sub"></p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-num">
+      <h2 id="h-num">ランダムな数字（4 桁・6 桁・範囲）</h2>
+      <div class="inline">
+        <div class="field">
+          <label for="num-kind">種類</label>
+          <select id="num-kind">
+            <option value="d4">4 桁（0000〜9999）</option>
+            <option value="d6">6 桁（000000〜999999）</option>
+            <option value="r100">1〜100</option>
+            <option value="range">範囲を決める</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="num-count">個数</label>
+          <input type="number" id="num-count" inputmode="numeric" min="1" max="20" value="1">
+        </div>
+      </div>
+      <div class="inline" id="range-box" hidden>
+        <div class="field"><label for="num-min">いちばん小さい数</label><input type="number" id="num-min" inputmode="numeric" value="1"></div>
+        <div class="field"><label for="num-max">いちばん大きい数</label><input type="number" id="num-max" inputmode="numeric" value="10"></div>
+      </div>
+      <label class="check" id="uniq-box"><input type="checkbox" id="num-uniq" checked> 同じ数を出さない</label>
+      <div class="btn-row"><button type="button" id="num-go" class="btn btn-big">数字を出す</button></div>
+      <div aria-live="polite">
+        <p class="big-out" id="num-out">—</p>
+        <p class="out-sub" id="num-sub"></p>
+      </div>
+      <p class="hint">暗証番号やパスワードそのものに使うのは避けてください（画面に出た数は、のぞき見やスクリーンショットで漏れることがあります）。</p>
+    </section>
+
+    <p class="small center">乱数はブラウザの <code>crypto.getRandomValues</code> で作り、どこにも送りません。入力も保存しません。</p>
+    <p class="small center">決めたいことが言葉なら → <a href="../">ルーレット</a>・<a href="../amida/">あみだくじ</a>・<a href="../odai/">お題の一覧</a></p>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="footer-nav" aria-label="フッターナビゲーション">
+      <ul>
+        <li><a href="../../">yorozu-craft トップ</a></li>
+        <li><a href="../">ルーレット</a></li>
+        <li><a href="./" aria-current="page">サイコロ・数字</a></li>
+        <li><a href="../guide.html#kodougu">使い方</a></li>
+        <li><a href="../../about.html">運営者情報</a></li>
+        <li><a href="../../privacy-policy.html">プライバシーポリシー</a></li>
+      </ul>
+    </nav>
+    <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
+  </footer>
+
+  <script src="../dice.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var D = window.Dice, src = D.cryptoSource();
+    var $ = function (id) { return document.getElementById(id); };
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // 押した感じを出すため 0.4 秒だけ目を回す（結果は押した時点で決まっている）
+    function spin(out, final, fmt, done) {
+      if (reduce) { out.textContent = final; done(); return; }
+      var n = 0, t = setInterval(function () {
+        out.textContent = fmt();
+        if (++n >= 8) { clearInterval(t); out.textContent = final; done(); }
+      }, 50);
+    }
+    $('dice-roll').addEventListener('click', function () {
+      var r = D.rollDice(Number($('dice-n').value), src);
+      spin($('dice-out'), r.faces.join(''), function () { return D.rollDice(r.values.length, src).faces.join(''); }, function () {
+        $('dice-sub').textContent = r.values.length > 1 ? r.values.join(' + ') + ' = 合計 ' + r.sum : r.values[0] + ' の目';
+      });
+    });
+    $('coin-toss').addEventListener('click', function () {
+      var c = D.coin(src);
+      spin($('coin-out'), c, function () { return D.coin(src); }, function () { $('coin-sub').textContent = c === '表' ? '表が出ました' : '裏が出ました'; });
+    });
+    function syncKind() {
+      var k = $('num-kind').value;
+      $('range-box').hidden = k !== 'range';
+      $('uniq-box').hidden = k === 'd4' || k === 'd6';
+    }
+    $('num-kind').addEventListener('change', syncKind);
+    $('num-go').addEventListener('click', function () {
+      var k = $('num-kind').value, n = Math.max(1, Math.min(20, Math.round(Number($('num-count').value)) || 1)), vals = [], msg = '';
+      if (k === 'd4' || k === 'd6') {
+        var used = {};
+        while (vals.length < n) { var s = D.digits(k === 'd4' ? 4 : 6, src); if (!used[s]) { used[s] = 1; vals.push(s); } }
+      } else {
+        var lo = k === 'r100' ? 1 : $('num-min').value, hi = k === 'r100' ? 100 : $('num-max').value;
+        var r = D.ints(lo, hi, n, $('num-uniq').checked, src);
+        if (!r.ok) {
+          $('num-out').textContent = '—';
+          $('num-sub').textContent = { few: '範囲の数より個数が多いので、同じ数を出さずには選べません。', wide: '範囲は 10 億個まで・±1 兆までにしてください。', nan: '数を入れてください。' }[r.code];
+          return;
+        }
+        vals = r.values.map(String);
+      }
+      if (n > 1) msg = n + ' 個';
+      var out = $('num-out');
+      out.style.fontSize = vals.join(' ').length > 14 ? '1.5rem' : '';
+      spin(out, vals.join(' '), function () { return vals.map(function (v) { return String(D.uniform(10, src)).repeat(Math.min(v.length, 6)); }).join(' '); }, function () { $('num-sub').textContent = msg; });
+    });
+    syncKind();
+  })();
+  </script>
+  <!-- Cloudflare Web Analytics（Cookie を使わないアクセス解析） --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b79bf821e1fd4b6683866d493b1de426"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

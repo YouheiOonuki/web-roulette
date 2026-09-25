@@ -50,7 +50,10 @@
     backupImportBtn: document.getElementById('backup-import'),
     backupFile: document.getElementById('backup-file'),
     backupMsg: document.getElementById('backup-msg'),
+    odaiSelect: document.getElementById('odai-select'),
+    odaiBtn: document.getElementById('odai-btn'),
   };
+  var AMIDA_KEY = 'web-roulette_amida';   // あみだくじのページ（amida/）の保存。書き出しのファイルに一緒に入れる
 
   // --- 状態 ---
   var candidates = []; // { name: string, weight: number }[]
@@ -155,6 +158,39 @@
     saveCandidates();
     renderCandidates();
     debugLog('プリセット候補をセット');
+  }
+
+  // --- お題の一覧（odai.js。K98）を候補に読み込む ---
+  function fillOdaiSelect() {
+    if (!window.Odai || !dom.odaiSelect) return;
+    window.Odai.LISTS.forEach(function (l) {
+      var opt = document.createElement('option');
+      opt.value = l.id;
+      opt.textContent = l.title + '（' + l.items.length + '）';
+      dom.odaiSelect.appendChild(opt);
+    });
+  }
+
+  function sameAsDefault() {
+    return candidates.length === DEFAULT_CANDIDATES.length &&
+      candidates.every(function (c, i) { return c.name === DEFAULT_CANDIDATES[i]; });
+  }
+
+  // ask: 今の候補が最初の 5 つでも空でもないときだけ、置き換えてよいか聞く
+  function loadOdai(id, ask) {
+    var l = window.Odai && window.Odai.byId(id);
+    if (!l || isSpinning) return false;
+    if (ask && candidates.length > 0 && !sameAsDefault() &&
+        !confirm('今の候補（' + candidates.length + '件）を「' + l.title + '」に置き換えますか？')) return false;
+    candidates = l.items.map(function (name) { return { name: name, weight: 1 }; });
+    saveCandidates();
+    renderCandidates();
+    updateSelectCountMax();
+    dom.selectCount.value = 1;
+    dom.resultDisplay.classList.add('hidden');
+    dom.rouletteText.textContent = l.title + '：スタートを押してください';
+    debugLog('お題を読み込み: ' + l.id);
+    return true;
   }
 
   function parseText(text, delimiterType) {
@@ -755,6 +791,10 @@
       }
     });
 
+    if (dom.odaiBtn) dom.odaiBtn.addEventListener('click', function () {
+      loadOdai(dom.odaiSelect.value, true);
+    });
+
     dom.presetBtn.addEventListener('click', function () {
       setPresetCandidates();
       updateSelectCountMax();
@@ -803,6 +843,7 @@
     // 中身はこの端末の中で作り、どこにも送信しない。機種変更のときはファイルを移して読み込む
     dom.backupExportBtn.addEventListener('click', function () {
       var data = { candidates: candidates, settings: settings, history: history };
+      try { var am = localStorage.getItem(AMIDA_KEY); if (am) data.amida = JSON.parse(am); } catch (err) { /* あみだくじの保存が無い・読めないときは入れない */ }
       var blob = new Blob([JSON.stringify(window.Backup.buildBackup(TOOL, data), null, 2)], { type: 'application/json' });
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -827,8 +868,17 @@
       }
       var reader = new FileReader();
       reader.onload = function (event) {
-        var r = window.Backup.parseBackup(event.target.result, TOOL, ['candidates']);
+        var r = window.Backup.parseBackup(event.target.result, TOOL, []);
         if (!r.ok) { dom.backupMsg.textContent = r.error; return; }
+        var hasRoulette = Array.isArray(r.data.candidates), hasAmida = !!(r.data.amida && window.Amida);
+        if (!hasRoulette && !hasAmida) { dom.backupMsg.textContent = 'ファイルの中身が足りないため読み込めません。'; return; }
+        // あみだくじのページで書き出したファイルに、ルーレットの候補が入っていないとき: あみだくじの入力だけを戻す
+        if (!hasRoulette) {
+          if (!confirm('ファイルにはあみだくじの入力だけが入っています。あみだくじの入力を置き換えます。よろしいですか？')) return;
+          try { localStorage.setItem(AMIDA_KEY, JSON.stringify(window.Amida.normalizeState(r.data.amida))); } catch (err) { /* 保存できなくても続ける */ }
+          dom.backupMsg.textContent = 'あみだくじの入力を読み込みました（ルーレットの候補はそのまま）。';
+          return;
+        }
         if (!confirm('ファイルの内容で、今の候補・設定・履歴を置き換えます。よろしいですか？')) return;
         var themes = Array.prototype.map.call(dom.themeSelect.options, function (o) { return o.value; });
         candidates = window.Backup.normalizeCandidates(r.data.candidates);
@@ -837,6 +887,10 @@
         saveCandidates();
         saveSettings();
         saveHistory();
+        // あみだくじのページの入力も入っていれば、正規化してから戻す
+        if (r.data.amida && window.Amida) {
+          try { localStorage.setItem(AMIDA_KEY, JSON.stringify(window.Amida.normalizeState(r.data.amida))); } catch (err) { /* 保存できなくても続ける */ }
+        }
         applySettings();
         renderCandidates();
         renderHistory();
@@ -887,6 +941,15 @@
     updateSelectCountMax();
 
     setupEventListeners();
+    fillOdaiSelect();
+
+    // お題の一覧（odai/）の「ルーレットで回す」から来たとき: #odai=<id>
+    var m = /^#odai=([a-z-]+)$/.exec(location.hash);
+    if (m) {
+      if (dom.odaiSelect) dom.odaiSelect.value = m[1];
+      loadOdai(m[1], hasData);
+      try { window.history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* 残っても害はない */ }
+    }
     debugLog('アプリ初期化完了');
   }
 
