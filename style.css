@@ -95,6 +95,9 @@ a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset:
 /* yorozu-common:end */
 
 /* 和紙風テーマ（デフォルト） */
+/* 共通の部品（入力欄の例の字など）が使う --muted を、テーマの副文字色に合わせる（端末のダークモードに引きずられない） */
+[data-theme] { --muted: var(--text-secondary); }
+
 [data-theme="washi"] {
   --bg-primary: #f0ebe0;
   --bg-secondary: #e6dfd0;
