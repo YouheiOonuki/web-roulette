@@ -1,5 +1,5 @@
 // ルーレットの抽選（pick.js）のテスト: node --test tests/*.test.js
-// あほらし館（/hade/roulette/）も同じ pick.js を同じ URL で読む（ROADMAP 7.46.1）
+// 5000兆円欲しい館（/hade/roulette/）も同じ pick.js を同じ URL で読む（ROADMAP 7.46.1）
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const P = require('../pick.js');

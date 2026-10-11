@@ -132,7 +132,7 @@
   // 乱数
   // ===========================
 
-  var Pick = window.RoulettePick;   // 抽選は pick.js（あほらし館と共有）
+  var Pick = window.RoulettePick;   // 抽選は pick.js（5000兆円欲しい館と共有）
   var seededRandom = Pick.seeded(42);
 
   function getRandom() {

@@ -1,5 +1,5 @@
 // ===========================
-// ルーレットの抽選（/web-roulette/ と、あほらし館の /hade/roulette/ が同じ URL で読む。写しを持たない: D312・ROADMAP 7.46.1）
+// ルーレットの抽選（/web-roulette/ と、5000兆円欲しい館の /hade/roulette/ が同じ URL で読む。写しを持たない: D312・ROADMAP 7.46.1）
 // 乱数の出どころ（0 以上 1 未満を返す関数）を外から受け取る純粋関数。ブラウザでは Math.random、テストと「テストモード」では seeded(42)
 // ブラウザでは window.RoulettePick、Node（テスト）では module.exports で使う
 // ===========================

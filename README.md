@@ -46,7 +46,7 @@ web-roulette/
 ├── index.html            # メインHTML（SEOメタタグ・構造化データ含む）
 ├── style.css             # テーマ対応スタイルシート
 ├── main.js               # アプリケーションロジック
-├── pick.js               # 抽選（候補の読み取り・種つき乱数・重みつき抽選）。あほらし館の /hade/roulette/ も同じ URL で読む
+├── pick.js               # 抽選（候補の読み取り・種つき乱数・重みつき抽選）。5000兆円欲しい館の /hade/roulette/ も同じ URL で読む
 ├── backup.js             # 候補・設定・履歴のファイルへの書き出し・読み込み（純粋関数）
 ├── tests/*.test.js       # backup.js・amida.js・odai.js・dice.js のテスト（node --test tests/*.test.js）
 ├── amida.js              # あみだくじのロジック（純粋関数）
