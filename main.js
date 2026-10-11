@@ -66,7 +66,6 @@
     testMode: false,
   };
   var isSpinning = false;
-  var testSeed = 42;
 
   // ===========================
   // ローカルストレージ
@@ -133,10 +132,8 @@
   // 乱数
   // ===========================
 
-  function seededRandom() {
-    testSeed = (testSeed * 16807) % 2147483647;
-    return (testSeed - 1) / 2147483646;
-  }
+  var Pick = window.RoulettePick;   // 抽選は pick.js（あほらし館と共有）
+  var seededRandom = Pick.seeded(42);
 
   function getRandom() {
     if (settings.testMode) {
@@ -193,17 +190,7 @@
     return true;
   }
 
-  function parseText(text, delimiterType) {
-    var sep;
-    switch (delimiterType) {
-      case 'comma': sep = ','; break;
-      case 'semicolon': sep = ';'; break;
-      default: sep = '\n';
-    }
-    return text.split(sep)
-      .map(function (s) { return s.trim(); })
-      .filter(function (s) { return s.length > 0; });
-  }
+  function parseText(text, delimiterType) { return Pick.parseText(text, delimiterType); }
 
   function addCandidatesFromNames(names) {
     names.forEach(function (name) {
@@ -315,43 +302,7 @@
   // ===========================
 
   function weightedRandomPickMultiple(count) {
-    if (candidates.length === 0) return [];
-    var n = Math.min(count, candidates.length);
-
-    // 残り候補をコピー（元のインデックスを保持）
-    var remaining = candidates.map(function (c, i) {
-      return { name: c.name, weight: c.weight, originalIndex: i };
-    });
-
-    var results = [];
-
-    for (var r = 0; r < n; r++) {
-      var picked;
-
-      if (!settings.weightEnabled) {
-        // 均等選択
-        var idx = Math.floor(getRandom() * remaining.length);
-        picked = remaining[idx];
-        remaining.splice(idx, 1);
-      } else {
-        // 重み付き選択
-        var pool = [];
-        remaining.forEach(function (c, i) {
-          for (var w = 0; w < c.weight; w++) pool.push(i);
-        });
-        var poolIdx = Math.floor(getRandom() * pool.length);
-        var remIdx = pool[poolIdx];
-        picked = remaining[remIdx];
-        remaining.splice(remIdx, 1);
-      }
-
-      results.push({
-        index: picked.originalIndex,
-        candidate: { name: picked.name, weight: picked.weight }
-      });
-    }
-
-    return results;
+    return Pick.pickMultiple(candidates, count, settings.weightEnabled, getRandom);
   }
 
   // ===========================
@@ -746,7 +697,7 @@
       saveSettings();
       if (settings.testMode) {
         dom.debugSection.classList.remove('hidden');
-        testSeed = 42;
+        seededRandom = Pick.seeded(42);
         debugLog('テストモード有効');
       } else {
         dom.debugSection.classList.add('hidden');
