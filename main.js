@@ -185,7 +185,7 @@
     updateSelectCountMax();
     dom.selectCount.value = 1;
     dom.resultDisplay.classList.add('hidden');
-    dom.rouletteText.textContent = l.title + '：スタートを押してください';
+    dom.rouletteText.textContent = l.title;
     debugLog('お題を読み込み: ' + l.id);
     return true;
   }
@@ -593,15 +593,9 @@
       dom.historySection.style.display = 'none';
       return;
     }
-    dom.historySection.style.display = '';
-
-    if (history.length === 0) {
-      var li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'まだ履歴がありません';
-      dom.historyList.appendChild(li);
-      return;
-    }
+    // 履歴が無いあいだは枠ごと出さない（空の旨の文を置かない。段 3 の 2）
+    dom.historySection.style.display = history.length ? '' : 'none';
+    if (history.length === 0) return;
 
     history.forEach(function (entry) {
       var li = document.createElement('li');
@@ -737,7 +731,7 @@
         renderCandidates();
         updateSelectCountMax();
         dom.resultDisplay.classList.add('hidden');
-        dom.rouletteText.textContent = 'スタートを押してください';
+        dom.rouletteText.textContent = '？';
         debugLog('候補をリセット');
       }
     });
@@ -750,7 +744,7 @@
       setPresetCandidates();
       updateSelectCountMax();
       dom.resultDisplay.classList.add('hidden');
-      dom.rouletteText.textContent = 'スタートを押してください';
+      dom.rouletteText.textContent = '？';
     });
 
     dom.startBtn.addEventListener('click', function () {
@@ -847,7 +841,7 @@
         renderHistory();
         updateSelectCountMax();
         dom.resultDisplay.classList.add('hidden');
-        dom.rouletteText.textContent = 'スタートを押してください';
+        dom.rouletteText.textContent = '？';
         dom.backupMsg.textContent = 'ファイルから読み込みました（候補 ' + candidates.length + '件）。';
         debugLog('ファイルから読み込み: 候補 ' + candidates.length + '件');
       };
