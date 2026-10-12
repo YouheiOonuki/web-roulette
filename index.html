@@ -80,11 +80,11 @@
     <!-- ① ルーレット表示エリア（最上部） -->
     <section class="roulette-section" aria-label="ルーレット">
       <div id="roulette-display" class="roulette-display" role="status" aria-live="polite">
-        <span id="roulette-text" class="roulette-text">スタートを押してください</span>
+        <span id="roulette-text" class="roulette-text">？</span>
       </div>
 
       <div id="result-display" class="result-display hidden" role="alert" aria-live="assertive">
-        <p class="result-label">結果</p>
+        <h2 class="result-label">結果</h2>
         <div id="result-text" class="result-text"></div>
       </div>
 
@@ -113,7 +113,7 @@
 
       <div class="input-group">
         <label for="candidate-input">手動入力</label>
-        <textarea id="candidate-input" rows="3" placeholder="候補を入力（複数入力可）" aria-describedby="delimiter-hint"></textarea>
+        <textarea id="candidate-input" rows="3" placeholder="候補を入力（複数入力可）"></textarea>
         <div class="input-controls">
           <div class="delimiter-select">
             <label for="delimiter">区切り:</label>
@@ -131,7 +131,6 @@
         <label for="file-upload">ファイルから読み込み (.txt)</label>
         <div class="file-upload-area">
           <input type="file" id="file-upload" accept=".txt" aria-label="テキストファイルから候補を読み込み">
-          <p class="file-hint" id="delimiter-hint">区切り文字は上記の設定が適用されます</p>
         </div>
       </div>
 
@@ -141,7 +140,7 @@
           <select id="odai-select" aria-describedby="odai-hint"></select>
           <button id="odai-btn" class="btn btn-secondary">読み込む</button>
         </div>
-        <p class="file-hint" id="odai-hint">今の候補と入れかわります。中身は <a href="./odai/">お題の一覧</a> で見られます。</p>
+        <p class="file-hint" id="odai-hint"><a href="./odai/">お題の一覧</a></p>
       </div>
 
       <div class="input-group input-group-buttons">
@@ -162,11 +161,9 @@
     </section>
 
     <!-- ④ 履歴 -->
-    <section id="history-section" class="history-section" aria-label="抽選履歴">
+    <section id="history-section" class="history-section" aria-label="抽選履歴" style="display:none">
       <h2>履歴 (最新10件)</h2>
-      <ul id="history-list" class="history-list" role="list">
-        <li class="history-empty">まだ履歴がありません</li>
-      </ul>
+      <ul id="history-list" class="history-list" role="list"></ul>
       <button id="clear-history-btn" class="btn btn-secondary" aria-label="履歴をクリア">履歴をクリア</button>
     </section>
 

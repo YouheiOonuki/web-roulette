@@ -399,6 +399,7 @@ body {
 
 .result-label {
   font-size: 0.8rem;
+  font-weight: normal;
   color: var(--text-secondary);
   margin-bottom: 0.3rem;
 }
@@ -663,7 +664,6 @@ select {
 
 .history-item:last-child { border-bottom: none; }
 .history-time { color: var(--text-secondary); font-size: 0.75rem; }
-.history-empty { text-align: center; color: var(--text-secondary); padding: 0.5rem; font-size: 0.85rem; }
 
 /* ===========================
    設定パネル

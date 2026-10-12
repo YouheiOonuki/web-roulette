@@ -59,16 +59,15 @@
   <main class="app-main">
 
     <div id="shared-banner" class="card notice" hidden>
-      <p id="shared-msg">共有されたあみだくじです。上の名前を押すと線をたどります。</p>
+      <h2 id="shared-msg">共有されたあみだくじ</h2>
       <p class="btn-row"><a class="btn btn-sub" href="./">自分のあみだくじを新しく作る</a></p>
     </div>
 
     <fieldset class="card req" id="inputs">
       <legend>くじの中身</legend>
       <div class="field">
-        <label for="names">参加する人（1 行に 1 人）</label>
+        <label for="names">参加する人（1 行に 1 人・20 人まで。空なら 1, 2, 3 … の番号）</label>
         <textarea id="names" rows="3" spellcheck="false" placeholder="例：&#10;青木&#10;井上&#10;上田"></textarea>
-        <p class="hint">空なら人数ぶんの番号（1, 2, 3 …）で作ります。20 人まで。</p>
       </div>
       <div class="inline">
         <div class="field" id="count-field">
@@ -87,16 +86,14 @@
         </div>
       </div>
       <div class="field" id="custom-field" hidden>
-        <label for="custom">結果（1 行に 1 つ）</label>
+        <label for="custom">結果（1 行に 1 つ。足りない分は「はずれ」）</label>
         <textarea id="custom" rows="3" spellcheck="false" placeholder="例：&#10;買い出し&#10;片付け&#10;司会"></textarea>
-        <p class="hint">人数より少ない分は「はずれ」になります。</p>
       </div>
       <p id="input-info" class="small" aria-live="polite"></p>
     </fieldset>
 
     <section class="card result-card" id="result-card" tabindex="-1" aria-labelledby="h-result">
-      <h2 id="h-result">あみだくじ</h2>
-      <p class="tap-hint" id="tap-hint">上の名前を押すと、線をたどって結果が出ます。</p>
+      <h2 id="h-result">上の名前を選ぶと線をたどる</h2>
       <div class="ladder-wrap">
         <div class="ladder" id="ladder"></div>
       </div>

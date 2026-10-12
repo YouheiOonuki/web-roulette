@@ -57,8 +57,8 @@
         <div class="field"><button type="button" id="dice-roll" class="btn btn-big">サイコロを振る</button></div>
       </div>
       <div id="result-dice" aria-live="polite">
-        <p class="big-out dice" id="dice-out">⚀</p>
-        <p class="out-sub" id="dice-sub">押すと振ります</p>
+        <output class="big-out dice" id="dice-out">⚀</output>
+        <output class="out-sub" id="dice-sub"></output>
       </div>
     </section>
 
@@ -66,8 +66,8 @@
       <h2 id="h-coin">コイントス</h2>
       <div class="btn-row"><button type="button" id="coin-toss" class="btn btn-big">コインを投げる</button></div>
       <div aria-live="polite">
-        <p class="big-out" id="coin-out">—</p>
-        <p class="out-sub" id="coin-sub"></p>
+        <output class="big-out" id="coin-out">—</output>
+        <output class="out-sub" id="coin-sub"></output>
       </div>
     </section>
 
@@ -95,10 +95,11 @@
       <label class="check" id="uniq-box"><input type="checkbox" id="num-uniq" checked> 同じ数を出さない</label>
       <div class="btn-row"><button type="button" id="num-go" class="btn btn-big">数字を出す</button></div>
       <div aria-live="polite">
-        <p class="big-out" id="num-out">—</p>
-        <p class="out-sub" id="num-sub"></p>
+        <output class="big-out" id="num-out">—</output>
+        <output class="out-sub" id="num-sub"></output>
       </div>
-      <p class="hint">暗証番号やパスワードそのものに使うのは避けてください（画面に出た数は、のぞき見やスクリーンショットで漏れることがあります）。</p>
+      <!-- data-keep: 安全上の注意（数をそのまま暗証番号に使わせない）。画面に置くと決めた文 -->
+      <p class="hint" data-keep>暗証番号やパスワードそのものに使うのは避けてください（画面に出た数は、のぞき見やスクリーンショットで漏れることがあります）。</p>
     </section>
 
     <!-- about-tool: 道具の説明（使い方ページの要約。AdSense 審査 2026-10-04） -->
@@ -120,8 +121,7 @@
     </details>
     <!-- /about-tool -->
 
-    <p class="small center">乱数はブラウザの <code>crypto.getRandomValues</code> で作り、どこにも送りません。入力も保存しません。</p>
-    <p class="small center">決めたいことが言葉なら → <a href="../">ルーレット</a>・<a href="../amida/">あみだくじ</a>・<a href="../odai/">お題の一覧</a></p>
+    <p class="small center"><a href="../">ルーレット</a>・<a href="../amida/">あみだくじ</a>・<a href="../odai/">お題の一覧</a></p>
 
   </main>
 
