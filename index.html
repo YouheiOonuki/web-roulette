@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" data-theme="washi">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +27,8 @@
   <meta name="twitter:description" content="候補を入力してスタートを押すだけ。複数選択・重み付け・シャッフル対応の無料ルーレット。">
 
   <!-- テーマカラー -->
-  <meta name="theme-color" content="#8b4513">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <!-- 構造化データ (JSON-LD) -->
   <script type="application/ld+json">
@@ -53,7 +54,6 @@
       "重み付け抽選",
       "シャッフル機能",
       "演出ON/OFF",
-      "6種類のテーマ",
       "履歴管理"
     ]
   }
@@ -95,8 +95,8 @@
           <span id="select-count-max" class="select-count-max"></span>
         </div>
         <div class="roulette-buttons">
-          <button id="start-btn" class="btn btn-start" aria-label="ルーレットをスタート">▶ スタート</button>
-          <button id="shuffle-btn" class="btn btn-secondary" aria-label="候補をシャッフル">🔀 シャッフル</button>
+          <button id="start-btn" class="btn-primary" aria-label="ルーレットをスタート">▶ スタート</button>
+          <button id="shuffle-btn" class="btn" aria-label="候補をシャッフル">🔀 シャッフル</button>
         </div>
       </div>
     </section>
@@ -123,7 +123,7 @@
               <option value="semicolon">セミコロン (;)</option>
             </select>
           </div>
-          <button id="add-btn" class="btn btn-primary" aria-label="候補を追加">追加</button>
+          <button id="add-btn" class="btn" aria-label="候補を追加">追加</button>
         </div>
       </div>
 
@@ -138,22 +138,22 @@
         <label for="odai-select">お題を読み込む（山手線ゲーム・王様ゲームなど）</label>
         <div class="input-controls">
           <select id="odai-select" aria-describedby="odai-hint"></select>
-          <button id="odai-btn" class="btn btn-secondary">読み込む</button>
+          <button id="odai-btn" class="btn">読み込む</button>
         </div>
         <p class="file-hint" id="odai-hint"><a href="./odai/">お題の一覧</a></p>
       </div>
 
       <div class="input-group input-group-buttons">
-        <button id="reset-btn" class="btn btn-danger" aria-label="候補をすべて削除">候補をリセット</button>
-        <button id="preset-btn" class="btn btn-secondary" aria-label="プリセット候補に戻す">プリセットに戻す</button>
+        <button id="reset-btn" class="btn" aria-label="候補をすべて削除">候補をリセット</button>
+        <button id="preset-btn" class="btn" aria-label="プリセット候補に戻す">プリセットに戻す</button>
       </div>
 
       <div class="input-group" role="group" aria-labelledby="backup-heading">
         <label id="backup-heading">バックアップ（候補・設定・履歴）</label>
         <div class="input-group-buttons">
-          <button id="backup-export" class="btn btn-secondary">ファイルに書き出す</button>
-          <button id="backup-import" class="btn btn-secondary">ファイルから読み込む</button>
-          <button type="button" class="btn btn-secondary" data-reset-storage="web-roulette_" data-reset-legacy="roulette_candidates roulette_settings roulette_history">保存した内容をすべて消す（初期状態に戻す）</button>
+          <button id="backup-export" class="btn">ファイルに書き出す</button>
+          <button id="backup-import" class="btn">ファイルから読み込む</button>
+          <button type="button" class="btn" data-reset-storage="web-roulette_" data-reset-legacy="roulette_candidates roulette_settings roulette_history">保存した内容をすべて消す（初期状態に戻す）</button>
           <input type="file" id="backup-file" accept=".json,application/json" hidden>
         </div>
         <p class="file-hint" id="backup-msg" aria-live="polite"></p>
@@ -164,24 +164,13 @@
     <section id="history-section" class="history-section" aria-label="抽選履歴" style="display:none">
       <h2>履歴 (最新10件)</h2>
       <ul id="history-list" class="history-list" role="list"></ul>
-      <button id="clear-history-btn" class="btn btn-secondary" aria-label="履歴をクリア">履歴をクリア</button>
+      <button id="clear-history-btn" class="btn" aria-label="履歴をクリア">履歴をクリア</button>
     </section>
 
     <!-- ⑤ 設定（最下部） -->
     <section class="settings-panel" aria-label="設定">
       <h2>設定</h2>
       <div class="settings-grid">
-        <div class="setting-item">
-          <label for="theme-select">テーマ</label>
-          <select id="theme-select" aria-label="テーマの選択">
-            <option value="washi">和紙風</option>
-            <option value="mori">森</option>
-            <option value="aizome">藍染</option>
-            <option value="dark">ダーク</option>
-            <option value="metal">メタル</option>
-            <option value="neon">ネオンサイバー</option>
-          </select>
-        </div>
         <div class="setting-item">
           <label for="animation-toggle">演出</label>
           <label class="toggle-switch">
@@ -229,14 +218,14 @@
       <p>抽選はブラウザの乱数機能で決めます。設定で「重み付け」を ON にすると候補ごとに1〜3の重みを付けられ、重みが大きいほど選ばれやすくなります。「シャッフル」は抽選とは別に候補の並び順をランダムに入れ替えるので、順番決めに向きます。抽選の結果は過去10回分が履歴に残ります。山手線ゲームや川柳などを候補に入れる<a href="./odai/">お題の一覧</a>、同じ目も出る<a href="./dice/">サイコロ・数字</a>、線をたどって決める<a href="./amida/">あみだくじ</a>は別のページです。</p>
       <h3>注意</h3>
       <p>金銭や重要な権利の分配など、強い公正性が求められる用途では、立会人を置くなど別の方法も併用してください。入力した候補・設定・抽選履歴（最新10件）は、この端末のブラウザ（localStorage、キー roulette_candidates・roulette_settings・roulette_history）にだけ保存され、外部には送信されません。書き出し・読み込み・消去はこの画面のボタンから。</p>
-      <p>6種類のテーマや、使える場面の例は<a href="./guide.html">ルーレットの使い方ガイド</a>に。</p>
+      <p>使える場面の例は<a href="./guide.html">ルーレットの使い方ガイド</a>に。</p>
     </details>
     <!-- /about-tool -->
     <!-- ⑧ デバッグ（テストモード時のみ） -->
     <section id="debug-section" class="debug-section hidden" aria-label="デバッグ">
       <h2>デバッグログ</h2>
       <pre id="debug-log" class="debug-log" role="log"></pre>
-      <button id="clear-debug-btn" class="btn btn-secondary" aria-label="デバッグログをクリア">ログクリア</button>
+      <button id="clear-debug-btn" class="btn" aria-label="デバッグログをクリア">ログクリア</button>
     </section>
 
   </main>
