@@ -19,7 +19,6 @@
 
   // --- DOM要素 ---
   var dom = {
-    themeSelect: document.getElementById('theme-select'),
     animationToggle: document.getElementById('animation-toggle'),
     weightToggle: document.getElementById('weight-toggle'),
     historyToggle: document.getElementById('history-toggle'),
@@ -59,7 +58,6 @@
   var candidates = []; // { name: string, weight: number }[]
   var history = [];
   var settings = {
-    theme: 'washi',
     animation: true,
     weightEnabled: false,
     historyEnabled: true,
@@ -99,7 +97,7 @@
       try {
         var saved = JSON.parse(data);
         for (var key in saved) {
-          if (saved.hasOwnProperty(key)) settings[key] = saved[key];
+          if (settings.hasOwnProperty(key) && saved.hasOwnProperty(key) && typeof saved[key] === typeof settings[key]) settings[key] = saved[key];
         }
       } catch (e) { /* ignore */ }
     }
@@ -615,17 +613,6 @@
   }
 
   // ===========================
-  // テーマ
-  // ===========================
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    settings.theme = theme;
-    saveSettings();
-    debugLog('テーマ変更: ' + theme);
-  }
-
-  // ===========================
   // 設定の反映
   // ===========================
 
@@ -636,13 +623,10 @@
     document.getElementById('test-setting').hidden = !debugAllowed;
     if (!debugAllowed) settings.testMode = false;
 
-    dom.themeSelect.value = settings.theme;
     dom.animationToggle.checked = settings.animation;
     dom.weightToggle.checked = settings.weightEnabled;
     dom.historyToggle.checked = settings.historyEnabled;
     dom.testToggle.checked = settings.testMode;
-
-    applyTheme(settings.theme);
 
     if (settings.testMode) {
       dom.debugSection.classList.remove('hidden');
@@ -662,10 +646,6 @@
   // ===========================
 
   function setupEventListeners() {
-    dom.themeSelect.addEventListener('change', function () {
-      applyTheme(this.value);
-    });
-
     dom.animationToggle.addEventListener('change', function () {
       settings.animation = this.checked;
       saveSettings();
@@ -825,9 +805,8 @@
           return;
         }
         if (!confirm('ファイルの内容で、今の候補・設定・履歴を置き換えます。よろしいですか？')) return;
-        var themes = Array.prototype.map.call(dom.themeSelect.options, function (o) { return o.value; });
         candidates = window.Backup.normalizeCandidates(r.data.candidates);
-        settings = window.Backup.normalizeSettings(r.data.settings, settings, themes);
+        settings = window.Backup.normalizeSettings(r.data.settings, settings);
         history = window.Backup.normalizeHistory(r.data.history);
         saveCandidates();
         saveSettings();

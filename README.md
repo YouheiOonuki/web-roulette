@@ -19,7 +19,6 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 ### その他の機能
 - **シャッフルモード**: 候補をランダムに並び替え
 - **重み付け（ON/OFF）**: 各候補に 1〜3 の重みを設定可能
-- **6種類のテーマ**: 和紙風 / 森 / 藍染 / ダーク / メタル / ネオンサイバー
 - **履歴（ON/OFF）**: 過去10回の結果をローカル保存
 - **キーボード操作**: 入力欄の外で Space / Enter を押すとスタート
 - **テストモード（開発者向け）**: URL に `?debug=1` を付けたときだけ表示。乱数固定、アニメーション高速化、デバッグログ表示
@@ -35,7 +34,7 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
   - 保存キー `web-roulette_amida`。書き出しのファイルはルーレットと同じ形で、`data.amida` に入る（どちらのページでも読み込める）
 - **お題の一覧** `/web-roulette/odai/`: 山手線ゲーム（小学生／中学生〜）、子ども向けの王様ゲームの命令、やさしい罰ゲーム、川柳・俳句、お絵かき、トークテーマ、サイコロ・コイン・じゃんけん。中身は `odai.js` の 1 か所で、ページの一覧は `node tools/build-odai.cjs` で作り直す（テストが一致を確かめる）。ルーレットの「お題を読み込む」と `/web-roulette/#odai=<id>` で候補に入る。恋愛・体にふれる・診断・占いは載せない（テストで禁止語を確かめる）
 - **サイコロ・数字** `/web-roulette/dice/`: サイコロ 1〜10 個（合計つき）、コイントス、4 桁・6 桁・1〜100・範囲の数字（重なりなしも）。`crypto.getRandomValues` と、割り切れない端を捨てる引き直しで、どの数も同じ確率（`dice.js`）
-- 新しいページの見た目は `kit.css`（toban と同じ和紙色・ダークモード自動）と `screen.js`。ルーレット本体は今までどおり `style.css` の 6 テーマ
+- 見た目は `style.css`（yorozu-common v2 の皮。ルーレット・使い方・お題・サイコロ・印刷の着地ページが読む。暗い表示は端末の設定に自動で合わせ、テーマの切り替えは持たない）。あみだくじ（`amida/`）だけが、ROADMAP D399 により 11/9 まで `kit.css` と `screen.js` のまま
 - 印刷のクレジットの着地ページ `print/`（noindex、sitemap に載せない）
 - テスト: `node --test tests/*.test.js`（`.github/workflows/test.yml` で push のたびに実行）
 
@@ -44,7 +43,7 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 ```
 web-roulette/
 ├── index.html            # メインHTML（SEOメタタグ・構造化データ含む）
-├── style.css             # テーマ対応スタイルシート
+├── style.css             # スタイルシート（yorozu-common v2 の皮 + このサイトの規則）
 ├── main.js               # アプリケーションロジック
 ├── pick.js               # 抽選（候補の読み取り・種つき乱数・重みつき抽選）。5000兆円欲しい館の /hade/roulette/ も同じ URL で読む
 ├── backup.js             # 候補・設定・履歴のファイルへの書き出し・読み込み（純粋関数）
@@ -56,7 +55,7 @@ web-roulette/
 ├── dice.js               # サイコロ・コイン・数字（純粋関数）
 ├── dice/index.html       # サイコロ・数字のページ
 ├── print/index.html      # 印刷物のクレジットの着地ページ（noindex）
-├── kit.css / screen.js   # 新しいページの共通 CSS・固定バーなどの部品（toban と同じもの）
+├── kit.css / screen.js   # あみだくじ（amida/）だけが読む CSS・固定バーなどの部品（11/9 以降に載せ替える）
 ├── tools/build-odai.cjs  # odai.js から odai/index.html の一覧を作る
 ├── guide.html            # 使い方ガイド・よくある質問
 ├── about.html            # yorozu-craft 共通の運営者情報（../about.html）へ移動する案内ページ
@@ -134,7 +133,6 @@ GitHub Pages の仕組みにより、Pages を有効にしたリポジトリは�
 - **PWA 対応**: オフライン動作、ホーム画面に追加
 - **効果音**: ON/OFF 切り替え可能な効果音
 - **候補のインポート/エクスポート**: JSON 形式での候補管理
-- **カスタムテーマ**: ユーザー独自のテーマ作成
 - **多言語対応**: 英語・中国語など
 
 ## ライセンス
