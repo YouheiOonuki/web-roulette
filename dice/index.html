@@ -18,15 +18,15 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#8b4513" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15191d" media="(prefers-color-scheme: dark)">
 
   <!-- Google AdSense: サイト所有確認の meta だけ。AdSense 審査が通るまで本文の薄いページは広告 script を外す（2026-10-04）。通ったら本文を足してから戻す -->
   <meta name="google-adsense-account" content="ca-pub-5375267956079717">
 
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="stylesheet" href="../kit.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
@@ -54,7 +54,7 @@
             <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
           </select>
         </div>
-        <div class="field"><button type="button" id="dice-roll" class="btn btn-big">サイコロを振る</button></div>
+        <div class="field"><button type="button" id="dice-roll" class="btn-primary">サイコロを振る</button></div>
       </div>
       <div id="result-dice" aria-live="polite">
         <output class="big-out dice" id="dice-out">⚀</output>
@@ -64,7 +64,7 @@
 
     <section class="card" aria-labelledby="h-coin">
       <h2 id="h-coin">コイントス</h2>
-      <div class="btn-row"><button type="button" id="coin-toss" class="btn btn-big">コインを投げる</button></div>
+      <div class="btn-row"><button type="button" id="coin-toss" class="btn">コインを投げる</button></div>
       <div aria-live="polite">
         <output class="big-out" id="coin-out">—</output>
         <output class="out-sub" id="coin-sub"></output>
@@ -93,7 +93,7 @@
         <div class="field"><label for="num-max">いちばん大きい数</label><input type="number" id="num-max" inputmode="numeric" value="10"></div>
       </div>
       <label class="check" id="uniq-box"><input type="checkbox" id="num-uniq" checked> 同じ数を出さない</label>
-      <div class="btn-row"><button type="button" id="num-go" class="btn btn-big">数字を出す</button></div>
+      <div class="btn-row"><button type="button" id="num-go" class="btn">数字を出す</button></div>
       <div aria-live="polite">
         <output class="big-out" id="num-out">—</output>
         <output class="out-sub" id="num-sub"></output>

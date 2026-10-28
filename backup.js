@@ -59,8 +59,8 @@
       });
   }
 
-  /** 設定: base（今の設定）にあるキーで、型が同じ値だけ受け取る。テーマは選べるものだけ */
-  function normalizeSettings(saved, base, themes) {
+  /** 設定: base（今の設定）にあるキーで、型が同じ値だけ受け取る */
+  function normalizeSettings(saved, base) {
     var s = {};
     for (var key in base) {
       if (base.hasOwnProperty(key)) s[key] = base[key];
@@ -69,7 +69,6 @@
     for (var k in s) {
       if (s.hasOwnProperty(k) && saved.hasOwnProperty(k) && typeof saved[k] === typeof s[k]) s[k] = saved[k];
     }
-    if ((themes || []).indexOf(s.theme) < 0) s.theme = base.theme;
     return s;
   }
 
