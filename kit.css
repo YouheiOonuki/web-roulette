@@ -76,33 +76,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 :where(html:not([data-skin="base"])) :where(.fixed-bar) { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--border); padding: var(--sp-2) var(--sp-4); }
 /* yorozu-common:end */
 
-:root {
-  color-scheme: light dark;
-  --bg: #f0ebe0;
-  --bg-2: #e6dfd0;
-  --card: #faf6ee;
-  --text: #3a3025;
-  --muted: #6e604f;
-  --accent: #8b4513;
-  --accent-soft: #f3e6d8;
-  --border: #cfc0a0;
-  --shadow: rgba(58, 48, 37, 0.12);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1c1814;
-    --bg-2: #25201a;
-    --card: #2b251e;
-    --text: #ece4d6;
-    --muted: #b9ab96;
-    --accent: #e0a066;
-    --accent-soft: #3a2e22;
-    --border: #4a3f33;
-    --shadow: rgba(0, 0, 0, 0.4);
-  }
-}
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 [hidden] { display: none !important; }
 
