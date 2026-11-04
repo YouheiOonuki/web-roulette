@@ -137,7 +137,7 @@
     return revealed.some(function (i) { return endOf(i) === endCol && shownDone[i]; });
   }
   var shownDone = {};
-  function showEnd(i) { shownDone[i] = true; }
+  function showEnd(i) { shownDone[i] = true; window.yzUsed?.(); }
 
   function updateBottom() {
     cur.bottom.forEach(function (res, col) {
