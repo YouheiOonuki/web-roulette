@@ -533,6 +533,7 @@
       span.textContent = (i + 1) + '. ' + r.candidate.name;
       dom.resultText.appendChild(span);
     });
+    window.yzUsed?.();
   }
 
   // 選択数を取得

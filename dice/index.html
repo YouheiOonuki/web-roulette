@@ -139,6 +139,7 @@
     <p>&copy; 2026 yorozu-craft. All rights reserved.</p>
   </footer>
 
+  <script src="../used.js"></script>
   <script src="../dice.js"></script>
   <script>
   (function () {
@@ -148,6 +149,7 @@
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     // 押した感じを出すため 0.4 秒だけ目を回す（結果は押した時点で決まっている）
     function spin(out, final, fmt, done) {
+      window.yzUsed?.();
       if (reduce) { out.textContent = final; done(); return; }
       var n = 0, t = setInterval(function () {
         out.textContent = fmt();
