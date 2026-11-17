@@ -6,7 +6,7 @@ const path = require('node:path');
 const read = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
 test('ルーレットとサイコロの並びは ul・li で、li の外に区切りの字を置かない', () => {
-  for (const [file, n] of [['index.html', 6], ['dice/index.html', 3]]) {
+  for (const [file, n] of [['index.html', 7], ['dice/index.html', 3]]) {
     const ul = /<ul class="sibling-links[^"]*">([\s\S]*?)<\/ul>/.exec(read(file));
     assert.ok(ul, `${file} に並びがある`);
     assert.equal((ul[1].match(/<li><a href="[^"]+">[^<]+<\/a><\/li>/g) || []).length, n, `${file} の項目の数`);
