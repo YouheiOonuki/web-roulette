@@ -78,7 +78,7 @@
   function renderLadder() {
     var box = $('ladder'), n = cur.top.length, lad = cur.lad;
     var W = box.parentNode.clientWidth || 340;
-    var colW = Math.max(46, Math.floor(W / n));
+    var colW = Math.max(52, Math.floor(W / n));   // 52 = 名前の札 44px ＋ 左右の間 4px ずつ（kit.css .ladder-top button。Q-298）
     // 横に入りきらない行だけ縦書きにする（13px の字で、枠の内側に何字入るか）
     var fits = function (list) { var mx = list.reduce(function (m, s) { return Math.max(m, Array.from(s).length); }, 0); return mx * 13.5 <= colW - 10; };
     var H = Math.max(200, Math.min(640, lad.levels * 18 + 30)), pad = 10;
