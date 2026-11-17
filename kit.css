@@ -170,7 +170,7 @@ a.btn { text-decoration: none; text-align: center; }
   border-top: 1px solid var(--border);
   margin-top: 0.5rem;
 }
-.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.4rem 1.1rem; margin-bottom: 0.6rem; }
+.footer-nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; gap: 0.5rem 1.1rem; margin-bottom: 0.6rem; }   /* 押す所の間 8px 以上（Q-298） */
 .footer-nav a { color: var(--muted); text-decoration: none; }
 .footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--accent); }
 
@@ -270,7 +270,8 @@ fieldset.plain { border: none; padding: 0; min-width: 0; }
 .center { text-align: center; }
 .check { display: flex; align-items: center; gap: 0.45rem; min-height: 44px; font-size: 0.92rem; cursor: pointer; }
 .check input { width: 1.15rem; height: 1.15rem; flex: none; accent-color: var(--accent); }
-.seg { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; }
+.seg { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+fieldset.plain + .check { margin-top: 0.5rem; }   /* 紙の形の選択と下のチェックの間 8px（Q-298） */
 .seg label { display: flex; align-items: center; gap: 0.35rem; min-height: 44px; font-size: 0.92rem; cursor: pointer; }
 .seg input { accent-color: var(--accent); width: 1.1rem; height: 1.1rem; }
 .days { display: flex; flex-wrap: wrap; gap: 0 0.3rem; }
@@ -298,8 +299,8 @@ table.roster tbody th { font-weight: 600; text-align: left; }
 .history { padding-left: 1.4rem; font-size: 0.88rem; }
 
 .lang-switch { text-align: right; font-size: 0.85rem; max-width: 680px; margin: 0.4rem auto 0; padding: 0 1rem; }
-.sibling-nav { max-width: 680px; margin: 0.6rem auto 0; padding: 0 1rem; font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; }
-.sibling-nav a { display: inline-block; min-height: 32px; line-height: 32px; }
+.sibling-nav { max-width: 680px; margin: 0.6rem auto 0; padding: 0 1rem; font-size: 0.85rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.sibling-nav a { display: inline-block; min-height: 44px; min-width: 44px; line-height: 44px; text-align: center; }   /* 押す所は 44px 四方・間 8px 以上（Q-298。字の読めない子も触る） */
 .sibling-nav a[aria-current="page"] { color: var(--text); font-weight: 700; text-decoration: none; }
 
 /* ===========================
@@ -311,7 +312,7 @@ table.roster tbody th { font-weight: 600; text-align: left; }
 .ladder-row { display: grid; grid-template-columns: repeat(var(--n), var(--col)); }
 .ladder-top button, .ladder-bottom span {
   display: flex; align-items: center; justify-content: center; text-align: center;
-  min-height: 44px; margin: 0 2px; padding: 0.15rem 0.1rem; font: inherit; font-size: 0.82rem; line-height: 1.25;
+  min-height: 44px; margin: 0 4px; padding: 0.15rem 0.1rem;   /* 隣の名前との間 8px（Q-298） */ font: inherit; font-size: 0.82rem; line-height: 1.25;
   border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--text);
   overflow-wrap: anywhere; word-break: break-all;
 }
@@ -323,6 +324,8 @@ table.roster tbody th { font-weight: 600; text-align: left; }
 .ladder-bottom span.shown { font-weight: 700; }
 .ladder-row.narrow button, .ladder-row.narrow span { white-space: pre-line; min-height: 5.4em; line-height: 1.15; }
 .ladder svg { display: block; width: 100%; }
+/* 図の下の 1 つずつのリンク（文中ではない）も 44px の高さに。行が折れたときの上下の間 8px（Q-298） */
+.result-card p.small a, .app-main > p.small.center a { display: inline-flex; align-items: center; min-height: 44px; margin-block: 4px; }
 .ladder svg .v, .ladder svg .h { stroke: var(--text); stroke-width: 2.2; stroke-linecap: round; }
 .ladder svg .path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
 .ladder.hide-rungs svg .h { visibility: hidden; }
