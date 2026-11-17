@@ -517,6 +517,7 @@
   // 最終結果表示
   function showResults(results) {
     dom.resultDisplay.classList.remove('hidden');
+    window.yzUsed?.();   // 1 件のときの早い return より前で（前は 2 件以上のときだけ数え、既定の 1 件では 0 回だった。Q-377）
 
     if (results.length === 1) {
       dom.resultText.className = 'result-text';
@@ -533,7 +534,6 @@
       span.textContent = (i + 1) + '. ' + r.candidate.name;
       dom.resultText.appendChild(span);
     });
-    window.yzUsed?.();
   }
 
   // 選択数を取得
