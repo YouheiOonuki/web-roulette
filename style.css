@@ -141,7 +141,7 @@ textarea { width: 100%; line-height: var(--lh-body); resize: vertical; }
 .delimiter-select { display: flex; align-items: center; gap: var(--sp-2); }
 .input-group .delimiter-select label { display: inline; font-weight: 400; margin-bottom: 0; }
 .file-upload-area input[type="file"] { max-width: 100%; }
-.file-hint { font-size: var(--fs-s); color: var(--muted); margin-top: var(--sp-1); }
+.file-hint { font-size: var(--fs-s); color: var(--muted); margin-top: var(--sp-2); }   /* 上の選ぶ欄との間 8px（Q-418） */
 .file-hint a { display: inline-flex; align-items: center; min-height: var(--tap); }
 #odai-select { flex: 1; min-width: 0; }
 
@@ -178,8 +178,8 @@ a.btn, a.btn-primary { text-decoration: none; text-align: center; }
 /* ナビゲーション */
 .site-nav { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-1) var(--sp-4); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: var(--sp-2); }
 .nav-brand { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 800; text-decoration: none; }
-.nav-links { list-style: none; display: flex; gap: 0 var(--sp-4); flex-wrap: wrap; }
-.nav-links a { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--muted); text-decoration: none; }
+.nav-links { list-style: none; display: flex; gap: var(--sp-2) var(--sp-4); flex-wrap: wrap; }
+.nav-links a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); color: var(--muted); text-decoration: none; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--accent); }
 
 /* コンテンツセクション（使い方・FAQ） */
@@ -210,16 +210,16 @@ a.btn, a.btn-primary { text-decoration: none; text-align: center; }
 
 /* フッター */
 .app-footer { text-align: center; padding: var(--sp-4); color: var(--muted); font-size: var(--fs-s); border-top: 1px solid var(--border); margin-top: var(--sp-2); }
-.footer-nav ul { list-style: none; display: flex; justify-content: center; gap: 0 var(--sp-4); flex-wrap: wrap; margin-bottom: var(--sp-2); }
-.footer-nav a { display: inline-flex; align-items: center; min-height: var(--tap); color: var(--muted); text-decoration: none; }
+.footer-nav ul { list-style: none; display: flex; justify-content: center; gap: var(--sp-2) var(--sp-4); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.footer-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); color: var(--muted); text-decoration: none; }
 .footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--accent); }
 .copyright { margin-top: var(--sp-1); }
 
 /* ほかのページ（あみだくじ・お題・サイコロ）へのリンク。区切りは字（・）でなく間隔で、折れても行が区切りから始まらない */
 .sibling-links { list-style: none; padding: 0; margin: var(--sp-3) var(--sp-4) 0; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2) var(--sp-4); }
 .sibling-links a { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 var(--sp-1); }
-.sibling-nav { max-width: 680px; margin: var(--sp-2) auto 0; padding: 0 var(--sp-4); display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); }
-.sibling-nav a { display: inline-flex; align-items: center; min-height: var(--tap); }
+.sibling-nav { max-width: 680px; margin: var(--sp-2) auto 0; padding: 0 var(--sp-4); display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); }
+.sibling-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); }   /* 押す所は 44px 四方・間 8px 以上（Q-418。あみだと同じ） */
 .sibling-nav a[aria-current="page"] { color: var(--text); font-weight: 700; text-decoration: none; }
 
 /* この道具について（画面の後ろの折りたたみ。使い方ページの要約。AdSense 審査 2026-10-04）。h3・p・li は .content-section の書式 */
@@ -246,6 +246,7 @@ details.about-tool ul { padding-left: 1.2rem; margin: var(--sp-1) 0 var(--sp-2);
 .center { text-align: center; }
 /* リンクだけを並べた行（目次・ほかの道具へ）は、リンクを 44px の高さにする */
 .small.center a, nav.card .small a { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 var(--sp-1); }
+nav.card .small a { margin-block: var(--sp-1); }   /* 目次が折れたとき、上下の行のリンクの間 8px（Q-418） */
 .odai-list { columns: 2 8rem; column-gap: var(--sp-6); padding-left: 1.6rem; line-height: 1.5; }
 .odai-list li { break-inside: avoid; padding: var(--sp-1) 0; }
 .odai-card h2 { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
@@ -265,7 +266,7 @@ output.big-out, output.out-sub { display: block; }
   .roulette-buttons { justify-content: center; }
   .roulette-buttons .btn-primary { flex: 1; }
   .site-nav { flex-direction: column; align-items: flex-start; }
-  .nav-links { gap: 0 var(--sp-3); }
+  .nav-links { gap: var(--sp-2) var(--sp-3); }
 }
 
 /* 印刷（お題の一覧を紙に） */
