@@ -215,8 +215,8 @@ a.btn, a.btn-primary { text-decoration: none; text-align: center; }
 .footer-nav a:hover, .footer-nav a[aria-current="page"] { color: var(--accent); }
 .copyright { margin-top: var(--sp-1); }
 
-/* ほかのページ（あみだくじ・お題・サイコロ）へのリンク */
-.sibling-links { text-align: center; margin: var(--sp-3) var(--sp-4) 0; color: var(--muted); }
+/* ほかのページ（あみだくじ・お題・サイコロ）へのリンク。区切りは字（・）でなく間隔で、折れても行が区切りから始まらない */
+.sibling-links { list-style: none; padding: 0; margin: var(--sp-3) var(--sp-4) 0; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2) var(--sp-4); }
 .sibling-links a { display: inline-flex; align-items: center; min-height: var(--tap); padding: 0 var(--sp-1); }
 .sibling-nav { max-width: 680px; margin: var(--sp-2) auto 0; padding: 0 var(--sp-4); display: flex; flex-wrap: wrap; gap: 0 var(--sp-4); }
 .sibling-nav a { display: inline-flex; align-items: center; min-height: var(--tap); }
