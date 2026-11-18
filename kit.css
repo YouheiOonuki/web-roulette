@@ -306,10 +306,12 @@ table.roster tbody th { font-weight: 600; text-align: left; }
 /* ===========================
    あみだくじ（/amida/）
    列の幅は amida-ui.js が決める（--col）。狭いときは枠の中だけ横にスクロールする（ページは横に動かさない）
+   紙では列の幅を決めず、刷れる幅を人数で割る（線も名前の欄も。20 人で 1 列 約 36px。Q-446）
    =========================== */
 .ladder-wrap { overflow-x: auto; margin: 0.4rem 0 0.2rem; padding: 0 0 0.4rem; }
 .ladder { position: relative; margin: 0 auto; }
-.ladder-row { display: grid; grid-template-columns: repeat(var(--n), var(--col)); }
+@media screen { .ladder { width: calc(var(--col) * var(--n)); } }
+.ladder-row { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
 .ladder-top button, .ladder-bottom span {
   display: flex; align-items: center; justify-content: center; text-align: center;
   min-height: 44px; margin: 0 4px; padding: 0.15rem 0.1rem;   /* 隣の名前との間 8px（Q-298） */ font: inherit; font-size: 0.82rem; line-height: 1.25;
@@ -323,7 +325,7 @@ table.roster tbody th { font-weight: 600; text-align: left; }
 .ladder-bottom span.hidden-res { color: var(--muted); background: var(--bg-2); }
 .ladder-bottom span.shown { font-weight: 700; }
 .ladder-row.narrow button, .ladder-row.narrow span { white-space: pre-line; min-height: 5.4em; line-height: 1.15; }
-.ladder svg { display: block; width: 100%; }
+.ladder svg { display: block; width: 100%; height: auto; }   /* 幅に合わせて縦も縮める（列と線がずれない） */
 /* 図の下の 1 つずつのリンク（文中ではない）も 44px の高さに。行が折れたときの上下の間 8px（Q-298） */
 .result-card p.small a, .app-main > p.small.center a { display: inline-flex; align-items: center; min-height: 44px; margin-block: 4px; }
 .ladder svg .v, .ladder svg .h { stroke: var(--text); stroke-width: 2.2; stroke-linecap: round; }
