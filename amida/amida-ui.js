@@ -84,8 +84,7 @@
     var H = Math.max(200, Math.min(640, lad.levels * 18 + 30)), pad = 10;
     geo = { colW: colW, H: H, pad: pad };
     box.innerHTML = '';
-    box.style.width = (colW * n) + 'px';
-    box.style.setProperty('--n', n);
+    box.style.setProperty('--n', n);   // 図の幅は kit.css が --col × --n で決める（画面だけ。紙では刷れる幅に収める。Q-446）
     box.style.setProperty('--col', colW + 'px');
     box.classList.toggle('hide-rungs', !!(state.hide && !shared) && !allShown);
 
