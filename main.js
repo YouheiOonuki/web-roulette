@@ -797,7 +797,7 @@
         var r = window.Backup.parseBackup(event.target.result, TOOL, []);
         if (!r.ok) { dom.backupMsg.textContent = r.error; return; }
         var hasRoulette = Array.isArray(r.data.candidates), hasAmida = !!(r.data.amida && window.Amida);
-        if (!hasRoulette && !hasAmida) { dom.backupMsg.textContent = 'ファイルの中身が足りないため読み込めません。'; return; }
+        if (!hasRoulette && !hasAmida) { dom.backupMsg.textContent = 'ファイルの中身が足りないため読み込めません。この道具の「ファイルに書き出す」で保存したファイルを選んでください。'; return; }
         // あみだくじのページで書き出したファイルに、ルーレットの候補が入っていないとき: あみだくじの入力だけを戻す
         if (!hasRoulette) {
           if (!confirm('ファイルにはあみだくじの入力だけが入っています。あみだくじの入力を置き換えます。よろしいですか？')) return;
