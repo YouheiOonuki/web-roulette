@@ -261,7 +261,6 @@ output.big-out, output.out-sub { display: block; }
 
 /* レスポンシブ */
 @media (max-width: 600px) {
-  .app-header h1 { font-size: var(--fs-l); }
   .roulette-text { font-size: var(--fs-xl); }
   .result-text { font-size: var(--fs-l); }
   .settings-grid { grid-template-columns: repeat(2, 1fr); }
