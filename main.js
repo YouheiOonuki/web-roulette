@@ -287,7 +287,7 @@
       var delBtn = document.createElement('button');
       delBtn.className = 'candidate-delete';
       delBtn.textContent = '✕';
-      delBtn.title = '削除';
+      delBtn.title = '消す';
       delBtn.addEventListener('click', function () { removeCandidate(i); });
       li.appendChild(delBtn);
 
