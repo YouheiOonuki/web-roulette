@@ -54,16 +54,20 @@ function screenFontSizes() {
   return out;
 }
 
-test('kit.css の画面の字の大きさは、共通の 4 段の変数か、font: inherit に続く入力の 1rem（D579・Q-737）', () => {
+test('kit.css の画面の字の大きさは、共通の 4 段の変数か、font: inherit に続く入力の 1rem（D579・Q-737・D597）', () => {
   const tiers = new Set(['var(--fs-s)', 'var(--fs-m)', 'var(--fs-l)', 'var(--fs-xl)']);
   // 残したもの: あみだの名前の札。--fs-s にすると 1 行に入っていた名前が 2 行に折れる（Q-737）
-  const kept = new Map([['.ladder-top button, .ladder-bottom span', '0.82rem']]);
-  // 寄せると今より小さくなる 0.9〜0.95rem（14.4〜15.2px → 14px）。字の読めない子も触るので Fable の答えまで今のまま（Q-737）
-  const pending = new Set(['0.9rem', '0.92rem', '0.95rem']);
+  // 0.9〜0.95rem の 11 宣言は --fs-m に上げた（D597・Q-754）。--fs-s に寄せると押す所の字が 14px に下がる。
+  // 上げると 1 行の字が 2 行に折れた 2 つ（折りたたみの見出し・よくある質問の問い）だけ元の値（Q-754 の止める条件）
+  const kept = new Map([
+    ['.ladder-top button, .ladder-bottom span', '0.82rem'],
+    ['details.card.opt > summary', '0.95rem'],
+    ['.faq dt', '0.92rem'],
+  ]);
   const all = screenFontSizes();
   assert.ok(all.length > 10, `font-size を ${all.length} 件しか拾えていない`);
   const bad = all.filter(([sel, v]) => {
-    if (tiers.has(v) || pending.has(v) || kept.get(sel) === v) return false;
+    if (tiers.has(v) || kept.get(sel) === v) return false;
     return !(v === '1rem' && sel === 'textarea');
   });
   assert.deepEqual(bad, []);
@@ -72,4 +76,14 @@ test('kit.css の画面の字の大きさは、共通の 4 段の変数か、fon
 test('kit.css の画面の見出し（.app-header h1・.card h2）は字の大きさを持たず、共通の皮に任せる（Q-737）', () => {
   const sels = screenFontSizes().map(([sel]) => sel);
   assert.ok(!sels.some((s) => /(^|,\s*)(\.app-header h1|\.card h2)$/.test(s)), sels.join(' / '));
+});
+
+test('押す所と読む字（.btn・.all-results・label ほか 9 宣言）は --fs-m（D597・Q-754）', () => {
+  const sizes = new Map(screenFontSizes());
+  for (const sel of ['.btn', '.all-results', '.field label', '.check', '.seg label', 'fieldset.plain > legend', '.req legend',
+    '.content p, .content li', 'details.about-tool h3', 'details.about-tool p, details.about-tool li']) {
+    assert.equal(sizes.get(sel), 'var(--fs-m)', sel);
+  }
+  const kinds = new Set(screenFontSizes().map(([, v]) => v));
+  assert.deepEqual([...kinds].sort(), ['0.82rem', '0.92rem', '0.95rem', '1rem', 'var(--fs-m)', 'var(--fs-s)']);
 });
