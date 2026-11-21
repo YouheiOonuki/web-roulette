@@ -151,7 +151,7 @@ a.btn { text-decoration: none; text-align: center; }
 .content p, .content li { font-size: var(--fs-m); }
 .content p + p { margin-top: 0.5rem; }
 .content ul, .content ol { padding-left: 1.3rem; margin: 0.3rem 0; }
-.faq dt { font-weight: 600; margin-top: 0.9rem; font-size: 0.92rem; }   /* --fs-m にすると 390 幅で 1 行の問いが 2 行に折れる（Q-754） */
+.faq dt { font-weight: 600; margin-top: 0.9rem; font-size: var(--fs-m); }   /* 390 幅で 2 行に折れる問いがある。折れを受ける（Q-808・D629） */
 .faq dt::before { content: 'Q. '; color: var(--accent); }
 .faq dd { font-size: var(--fs-s); color: var(--muted); padding: 0.2rem 0 0.5rem 1.2rem; border-bottom: 1px solid var(--border); }
 .small { font-size: var(--fs-s); color: var(--muted); margin-top: 0.4rem; }
@@ -188,7 +188,7 @@ fieldset.card { min-width: 0; }
 details.card.opt { padding: 0 1.2rem; margin-bottom: 0.6rem; }
 details.card.opt > summary {
   cursor: pointer; display: block; min-height: 44px; padding: 0.6rem 0;
-  color: var(--accent); font-weight: 600; font-size: 0.95rem; list-style: none;   /* --fs-m にすると 390・320 幅で 1 行の見出しが 2 行に折れる（Q-754） */
+  color: var(--accent); font-weight: 600; font-size: var(--fs-m); list-style: none;   /* 印刷の見出しは 320 で 2 行に折れる。折れを受ける（Q-808・D629） */
 }
 details.card.opt > summary::-webkit-details-marker { display: none; }
 details.card.opt > summary::before { content: '▸'; margin-right: 0.4rem; }
@@ -238,6 +238,18 @@ fieldset.plain + .check { margin-top: 0.5rem; }   /* 紙の形の選択と下の
 .sibling-nav { max-width: 680px; margin: 0.6rem auto 0; padding: 0 1rem; font-size: var(--fs-s); display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
 .sibling-nav a { display: inline-block; min-height: 44px; min-width: 44px; line-height: 44px; text-align: center; }   /* 押す所は 44px 四方・間 8px 以上（Q-298。字の読めない子も触る） */
 .sibling-nav a[aria-current="page"] { color: var(--text); font-weight: 700; text-decoration: none; }
+
+/* 320 幅（〜359px）のあみだくじの画面: 開いた直後に名前の札の行が 844 の高さに入るよう、札の行より上の縦の余白を 8px に詰める（Q-808・D629。390 から上と使い方ページは変えない） */
+@media screen and (max-width: 359px) {
+  .page-amida .sibling-nav { margin-top: 0.5rem; }
+  .page-amida .app-header { padding-block: 0.5rem; }
+  .page-amida .app-main { padding-top: 0.5rem; }
+  .page-amida #inputs { padding-block: 0.5rem; margin-bottom: 0.5rem; }
+  .page-amida #inputs legend { margin-bottom: 0.5rem; }
+  .page-amida #inputs .field { margin-bottom: 0.5rem; }
+  .page-amida #inputs .inline { gap: 0.5rem; }
+  .page-amida #result-card { padding-top: 0.5rem; }
+}
 
 /* ===========================
    あみだくじ（/amida/）
