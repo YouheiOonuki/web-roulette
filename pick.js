@@ -55,7 +55,14 @@
     return results;
   }
 
-  var api = { parseText: parseText, seeded: seeded, pickMultiple: pickMultiple };
+  /** ボタンを押した時の知らせ（D578: alert で出さず、画面の中に出す）。'start' は候補 0、'shuffle' は候補 2 つ未満で字を返し、通れば '' */
+  function buttonNotice(kind, count) {
+    if (kind === 'start') return count === 0 ? '候補がありません。候補を追加してください。' : '';
+    if (kind === 'shuffle') return count < 2 ? 'シャッフルには2つ以上の候補が必要です。' : '';
+    return '';
+  }
+
+  var api = { parseText: parseText, seeded: seeded, pickMultiple: pickMultiple, buttonNotice: buttonNotice };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.RoulettePick = api;
 })(this);

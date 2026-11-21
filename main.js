@@ -51,6 +51,7 @@
     backupMsg: document.getElementById('backup-msg'),
     odaiSelect: document.getElementById('odai-select'),
     odaiBtn: document.getElementById('odai-btn'),
+    rouletteError: document.getElementById('roulette-error'),
   };
   var AMIDA_KEY = 'web-roulette_amida';   // あみだくじのページ（amida/）の保存。書き出しのファイルに一緒に入れる
 
@@ -231,7 +232,28 @@
   // 候補一覧の描画
   // ===========================
 
+  // --- スタート・シャッフルの知らせ（D578。#result-display・#roulette-display は結果の箱なので使わない） ---
+  // 出した知らせは、同じボタンが次に通った時か、候補の数が条件を外れた時（renderCandidates）に消す
+  var noticeKind = null;
+  function showNotice(kind) {
+    var msg = Pick.buttonNotice(kind, candidates.length);
+    if (msg) {
+      noticeKind = kind;
+      dom.rouletteError.textContent = msg;
+      dom.rouletteError.hidden = false;
+      return true;
+    }
+    if (noticeKind === kind) clearNotice();
+    return false;
+  }
+  function clearNotice() {
+    noticeKind = null;
+    dom.rouletteError.textContent = '';
+    dom.rouletteError.hidden = true;
+  }
+
   function renderCandidates() {
+    if (noticeKind && !Pick.buttonNotice(noticeKind, candidates.length)) clearNotice();
     dom.candidateList.innerHTML = '';
     dom.candidateCount.textContent = candidates.length;
 
@@ -730,10 +752,7 @@
 
     dom.startBtn.addEventListener('click', function () {
       if (isSpinning) return;
-      if (candidates.length === 0) {
-        alert('候補がありません。候補を追加してください。');
-        return;
-      }
+      if (showNotice('start')) return;
 
       dom.resultDisplay.classList.add('hidden');
       clearAllHighlights();
@@ -747,10 +766,7 @@
 
     dom.shuffleBtn.addEventListener('click', function () {
       if (isSpinning) return;
-      if (candidates.length < 2) {
-        alert('シャッフルには2つ以上の候補が必要です。');
-        return;
-      }
+      if (showNotice('shuffle')) return;
       shuffleCandidates();
     });
 
