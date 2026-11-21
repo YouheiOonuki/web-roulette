@@ -728,7 +728,7 @@
     });
 
     dom.resetBtn.addEventListener('click', function () {
-      if (confirm('候補をすべて削除しますか？')) {
+      if (confirm('候補をすべて削除しますか？ 元に戻せません。')) {
         candidates = [];
         saveCandidates();
         renderCandidates();
