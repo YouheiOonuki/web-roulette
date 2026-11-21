@@ -1,0 +1,15 @@
+{
+  "src": "reset-storage.js",
+  "prefixes": [
+    "web-roulette_"
+  ],
+  "legacy": [
+    "roulette_candidates",
+    "roulette_settings",
+    "roulette_history"
+  ],
+  "pagePrefixes": {},
+  "pageLegacy": {},
+  "inline": [],
+  "skipDirs": []
+}
