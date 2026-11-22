@@ -1,6 +1,6 @@
 // ===========================
 // ルーレットの抽選（/web-roulette/ と、5000兆円欲しい館の /hade/roulette/ が同じ URL で読む。写しを持たない: D312・ROADMAP 7.46.1）
-// 乱数の出どころ（0 以上 1 未満を返す関数）を外から受け取る純粋関数。ブラウザでは Math.random、テストと「テストモード」では seeded(42)
+// 乱数の出どころ（0 以上 1 未満を返す関数）を外から受け取る純粋関数。ブラウザでは Math.random、テスト（この repo と hade の tests）では seeded
 // ブラウザでは window.RoulettePick、Node（テスト）では module.exports で使う
 // ===========================
 (function (root) {
@@ -19,7 +19,7 @@
       .filter(function (s) { return s.length > 0; });
   }
 
-  /** 種つきの乱数（Park–Miller。テストモードの再現用） */
+  /** 種つきの乱数（Park–Miller。テストで同じ列を出す用） */
   function seeded(seed) {
     var s = seed;
     return function () {

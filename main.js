@@ -22,7 +22,6 @@
     animationToggle: document.getElementById('animation-toggle'),
     weightToggle: document.getElementById('weight-toggle'),
     historyToggle: document.getElementById('history-toggle'),
-    testToggle: document.getElementById('test-toggle'),
     candidateInput: document.getElementById('candidate-input'),
     delimiter: document.getElementById('delimiter'),
     addBtn: document.getElementById('add-btn'),
@@ -42,9 +41,6 @@
     historySection: document.getElementById('history-section'),
     historyList: document.getElementById('history-list'),
     clearHistoryBtn: document.getElementById('clear-history-btn'),
-    debugSection: document.getElementById('debug-section'),
-    debugLog: document.getElementById('debug-log'),
-    clearDebugBtn: document.getElementById('clear-debug-btn'),
     backupExportBtn: document.getElementById('backup-export'),
     backupImportBtn: document.getElementById('backup-import'),
     backupFile: document.getElementById('backup-file'),
@@ -62,7 +58,6 @@
     animation: true,
     weightEnabled: false,
     historyEnabled: true,
-    testMode: false,
   };
   var isSpinning = false;
 
@@ -72,7 +67,6 @@
 
   function saveCandidates() {
     localStorage.setItem(STORAGE_KEYS.candidates, JSON.stringify(candidates));
-    debugLog('候補を保存: ' + candidates.length + '件');
   }
 
   function loadCandidates() {
@@ -80,7 +74,6 @@
     if (data) {
       try {
         candidates = JSON.parse(data);
-        debugLog('候補を読み込み: ' + candidates.length + '件');
       } catch (e) {
         candidates = [];
       }
@@ -116,32 +109,10 @@
   }
 
   // ===========================
-  // デバッグログ
-  // ===========================
-
-  function debugLog(msg) {
-    if (!settings.testMode) return;
-    var time = new Date().toLocaleTimeString('ja-JP');
-    dom.debugLog.textContent += '[' + time + '] ' + msg + '\n';
-    dom.debugLog.scrollTop = dom.debugLog.scrollHeight;
-    console.log('[DEBUG]', msg);
-  }
-
-  // ===========================
   // 乱数
   // ===========================
 
   var Pick = window.RoulettePick;   // 抽選は pick.js（5000兆円欲しい館と共有）
-  var seededRandom = Pick.seeded(42);
-
-  function getRandom() {
-    if (settings.testMode) {
-      var r = seededRandom();
-      debugLog('乱数(シード): ' + r.toFixed(4));
-      return r;
-    }
-    return Math.random();
-  }
 
   // ===========================
   // 候補管理
@@ -153,7 +124,6 @@
     });
     saveCandidates();
     renderCandidates();
-    debugLog('プリセット候補をセット');
   }
 
   // --- お題の一覧（odai.js。K98）を候補に読み込む ---
@@ -185,7 +155,6 @@
     dom.selectCount.value = 1;
     dom.resultDisplay.classList.add('hidden');
     dom.rouletteText.textContent = l.title;
-    debugLog('お題を読み込み: ' + l.id);
     return true;
   }
 
@@ -198,7 +167,6 @@
     saveCandidates();
     renderCandidates();
     updateSelectCountMax();
-    debugLog('候補を追加: ' + names.join(', '));
   }
 
   function removeCandidate(index) {
@@ -206,14 +174,12 @@
     saveCandidates();
     renderCandidates();
     updateSelectCountMax();
-    debugLog('候補を削除: ' + (removed[0] ? removed[0].name : ''));
   }
 
   function updateWeight(index, weight) {
     if (candidates[index]) {
       candidates[index].weight = parseInt(weight, 10);
       saveCandidates();
-      debugLog('重み変更: ' + candidates[index].name + ' → ' + weight);
     }
   }
 
@@ -322,7 +288,7 @@
   // ===========================
 
   function weightedRandomPickMultiple(count) {
-    return Pick.pickMultiple(candidates, count, settings.weightEnabled, getRandom);
+    return Pick.pickMultiple(candidates, count, settings.weightEnabled, Math.random);
   }
 
   // ===========================
@@ -361,8 +327,6 @@
       var items = dom.candidateList.querySelectorAll('.candidate-item');
       if (items[r.index]) items[r.index].classList.add('locked');
     });
-
-    debugLog('即時選択: ' + results.map(function (r) { return r.candidate.name; }).join(', '));
   }
 
   // 演出あり：ドキドキルーレット（複数選択対応）
@@ -378,9 +342,6 @@
 
     var lockedIndices = {}; // 確定済みインデックスのセット
     var roundIdx = 0;
-
-    debugLog('演出開始: ' + count + '個選択, 結果=[' +
-      results.map(function (r) { return r.candidate.name; }).join(', ') + ']');
 
     function runRound() {
       if (roundIdx >= results.length) {
@@ -414,7 +375,7 @@
         }
       }
 
-      var minSteps = settings.testMode ? 8 : 15;
+      var minSteps = 15;
       var remainder = minSteps % available.length;
       var totalSteps = minSteps +
         ((targetAvailIdx - remainder + available.length) % available.length);
@@ -437,7 +398,7 @@
         currentStep++;
 
         if (currentStep <= totalSteps) {
-          var baseInterval = settings.testMode ? 15 : 40;
+          var baseInterval = 40;
           var progress = currentStep / totalSteps;
           var interval = baseInterval + Math.pow(progress, 2) * 350;
           setTimeout(step, interval);
@@ -457,7 +418,7 @@
           roundIdx++;
 
           // 次のラウンドまで少し間を置く
-          var pause = settings.testMode ? 150 : 500;
+          var pause = 500;
           setTimeout(runRound, pause);
         }
       }
@@ -482,8 +443,6 @@
     addHistoryEntry(results);
 
     setSpinning(false);
-
-    debugLog('演出終了');
   }
 
   // 回転中は候補や設定を変更できないようにロックする
@@ -573,14 +532,13 @@
   function shuffleCandidates() {
     if (candidates.length < 2) return;
     for (var i = candidates.length - 1; i > 0; i--) {
-      var j = Math.floor(getRandom() * (i + 1));
+      var j = Math.floor(Math.random() * (i + 1));
       var temp = candidates[i];
       candidates[i] = candidates[j];
       candidates[j] = temp;
     }
     saveCandidates();
     renderCandidates();
-    debugLog('シャッフル実行');
   }
 
   // ===========================
@@ -604,7 +562,6 @@
 
     saveHistory();
     renderHistory();
-    debugLog('履歴に追加: ' + names);
   }
 
   function renderHistory() {
@@ -640,22 +597,9 @@
   // ===========================
 
   function applySettings() {
-    // テストモードは開発者向け。URLに ?debug=1 があるときだけ切り替えを表示し、
-    // それ以外では保存値が残っていても強制的にOFFにする
-    var debugAllowed = /[?&]debug=1(&|$)/.test(location.search);
-    document.getElementById('test-setting').hidden = !debugAllowed;
-    if (!debugAllowed) settings.testMode = false;
-
     dom.animationToggle.checked = settings.animation;
     dom.weightToggle.checked = settings.weightEnabled;
     dom.historyToggle.checked = settings.historyEnabled;
-    dom.testToggle.checked = settings.testMode;
-
-    if (settings.testMode) {
-      dom.debugSection.classList.remove('hidden');
-    } else {
-      dom.debugSection.classList.add('hidden');
-    }
 
     if (settings.historyEnabled) {
       dom.historySection.style.display = '';
@@ -672,33 +616,18 @@
     dom.animationToggle.addEventListener('change', function () {
       settings.animation = this.checked;
       saveSettings();
-      debugLog('演出: ' + (settings.animation ? 'ON' : 'OFF'));
     });
 
     dom.weightToggle.addEventListener('change', function () {
       settings.weightEnabled = this.checked;
       saveSettings();
       renderCandidates();
-      debugLog('重み付け: ' + (settings.weightEnabled ? 'ON' : 'OFF'));
     });
 
     dom.historyToggle.addEventListener('change', function () {
       settings.historyEnabled = this.checked;
       saveSettings();
       renderHistory();
-      debugLog('履歴: ' + (settings.historyEnabled ? 'ON' : 'OFF'));
-    });
-
-    dom.testToggle.addEventListener('change', function () {
-      settings.testMode = this.checked;
-      saveSettings();
-      if (settings.testMode) {
-        dom.debugSection.classList.remove('hidden');
-        seededRandom = Pick.seeded(42);
-        debugLog('テストモード有効');
-      } else {
-        dom.debugSection.classList.add('hidden');
-      }
     });
 
     dom.addBtn.addEventListener('click', function () {
@@ -720,7 +649,6 @@
         var names = parseText(text, dom.delimiter.value);
         if (names.length > 0) {
           addCandidatesFromNames(names);
-          debugLog('ファイル読み込み: ' + file.name + ' (' + names.length + '件)');
         }
         dom.fileUpload.value = '';
       };
@@ -735,7 +663,6 @@
         updateSelectCountMax();
         dom.resultDisplay.classList.add('hidden');
         dom.rouletteText.textContent = '？';
-        debugLog('候補をリセット');
       }
     });
 
@@ -774,11 +701,6 @@
       history = [];
       saveHistory();
       renderHistory();
-      debugLog('履歴をクリア');
-    });
-
-    dom.clearDebugBtn.addEventListener('click', function () {
-      dom.debugLog.textContent = '';
     });
 
     // --- ファイルへの書き出し・読み込み（README「ツールを追加するとき」20。決定 D31） ---
@@ -839,7 +761,6 @@
         dom.resultDisplay.classList.add('hidden');
         dom.rouletteText.textContent = '？';
         dom.backupMsg.textContent = 'ファイルから読み込みました（候補 ' + candidates.length + '件）。';
-        debugLog('ファイルから読み込み: 候補 ' + candidates.length + '件');
       };
       reader.onerror = function () { dom.backupMsg.textContent = 'ファイルを読み取れませんでした。'; };
       reader.readAsText(file);
@@ -891,7 +812,6 @@
       loadOdai(m[1], hasData);
       try { window.history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* 残っても害はない */ }
     }
-    debugLog('アプリ初期化完了');
   }
 
   if (document.readyState === 'loading') {

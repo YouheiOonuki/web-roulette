@@ -174,10 +174,6 @@ a.btn, a.btn-primary { text-decoration: none; text-align: center; }
 .toggle-switch input:checked + .toggle-slider { background: var(--accent); }
 .toggle-switch input:checked + .toggle-slider::before { transform: translateX(22px); }
 
-/* デバッグ */
-.debug-section.hidden { display: none; }
-.debug-log { background: var(--bg); color: var(--muted); padding: var(--sp-3); border-radius: var(--radius); font-size: var(--fs-s); max-height: 180px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; margin-bottom: var(--sp-2); }
-
 /* ナビゲーション */
 .site-nav { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-1) var(--sp-4); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: var(--sp-2); }
 .nav-brand { display: inline-flex; align-items: center; min-height: var(--tap); font-weight: 800; text-decoration: none; }
