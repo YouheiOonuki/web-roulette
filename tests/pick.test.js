@@ -12,7 +12,7 @@ test('parseText: 区切りごとに分け、空白と空の行を捨てる', () 
   assert.deepEqual(P.parseText('a;b', 'semicolon'), ['a', 'b']);
 });
 
-test('seeded: 同じ種なら同じ列（テストモードの 42 は main.js の元の式と同じ値）', () => {
+test('seeded: 同じ種なら同じ列（Park–Miller の式と同じ値）', () => {
   const a = P.seeded(42), b = P.seeded(42);
   for (let i = 0; i < 5; i++) assert.equal(a(), b());
   assert.equal(P.seeded(42)(), ((42 * 16807) % 2147483647 - 1) / 2147483646);

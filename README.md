@@ -21,7 +21,6 @@ API を一切使用せず、HTML / CSS / JavaScript の静的サイトとして�
 - **重み付け（ON/OFF）**: 各候補に 1〜3 の重みを設定可能
 - **履歴（ON/OFF）**: 過去10回の結果をローカル保存
 - **キーボード操作**: 入力欄の外で Space / Enter を押すとスタート
-- **テストモード（開発者向け）**: URL に `?debug=1` を付けたときだけ表示。乱数固定、アニメーション高速化、デバッグログ表示
 
 ### SEO・AdSense対応
 - **SEO最適化**: meta description、Open Graph（共有用画像つき）、Twitter Card、JSON-LD構造化データ（WebApplication + FAQPage）

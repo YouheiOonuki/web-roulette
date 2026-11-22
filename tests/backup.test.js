@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { backupFileName, buildBackup, parseBackup } = require('../backup.js');
 
 const TOOL = 'web-roulette';
-const DATA = { candidates: [{ name: 'カレー', weight: 1 }, { name: '寿司', weight: 3 }], settings: { animation: true, weightEnabled: true, historyEnabled: true, testMode: false }, history: [{ name: '寿司', count: 1, time: '2026/9/24 10:00:00' }] };
+const DATA = { candidates: [{ name: 'カレー', weight: 1 }, { name: '寿司', weight: 3 }], settings: { animation: true, weightEnabled: true, historyEnabled: true }, history: [{ name: '寿司', count: 1, time: '2026/9/24 10:00:00' }] };
 const REQUIRED = ['candidates'];
 
 test('backupFileName: <ツール名>-backup-YYYYMMDD.json（端末の日付）', () => {
@@ -79,9 +79,9 @@ test('normalizeCandidates: 名前が空でないものだけ・重みは 1〜3',
 });
 
 test('normalizeSettings: 今の設定にあるキーで型が同じものだけ（保存に残る古い theme は受け取らない）', () => {
-  const base = { animation: true, weightEnabled: false, historyEnabled: true, testMode: false };
+  const base = { animation: true, weightEnabled: false, historyEnabled: true };
   assert.deepEqual(normalizeSettings({ theme: 'mori', animation: 'no', weightEnabled: true, extra: 1 }, base),
-    { animation: true, weightEnabled: true, historyEnabled: true, testMode: false });
+    { animation: true, weightEnabled: true, historyEnabled: true });
   assert.deepEqual(normalizeSettings(null, base), base);
 });
 
