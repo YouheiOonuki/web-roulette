@@ -16,3 +16,11 @@ test('ルーレットとサイコロの並びは ul・li で、li の外に区�
   assert.match(css, /\.sibling-links \{[^}]*display: flex;[^}]*gap: var\(--sp-2\) var\(--sp-4\)/, '行の間 8px・項目の間 16px');
   assert.match(css, /\.sibling-links a \{[^}]*min-height: var\(--tap\)/, '押す所 44px');
 });
+
+// 型 A（yorozu-plans D896・Q-1138）: あみだの使い方の <main> の最初の段落は答えの文。「▶ あみだくじを作る」はその後ろ
+test('あみだの使い方: 最初の段落は答えの文、リンクはその後ろ', () => {
+  const main = read('amida/guide.html').split('<main')[1];
+  const first = main.match(/<p[^>]*>([\s\S]*?)<\/p>/)[1];
+  assert.equal(first, '参加する人を 1 行に 1 人ずつ入れると、あみだくじになります。先に全員の結果を公平に決めてから横線を引くので、横線の本数で結果が偏りません。');
+  assert.ok(main.indexOf(first) < main.indexOf('▶ あみだくじを作る'));
+});
