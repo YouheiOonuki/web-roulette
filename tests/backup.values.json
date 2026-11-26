@@ -1,0 +1,31 @@
+{
+  "module": "backup.js",
+  "tool": "web-roulette",
+  "data": {
+    "candidates": [
+      {
+        "name": "カレー",
+        "weight": 1
+      },
+      {
+        "name": "寿司",
+        "weight": 3
+      }
+    ],
+    "settings": {
+      "animation": true,
+      "weightEnabled": true,
+      "historyEnabled": true
+    },
+    "history": [
+      {
+        "name": "寿司",
+        "count": 1,
+        "time": "2026/9/24 10:00:00"
+      }
+    ]
+  },
+  "required": [
+    "candidates"
+  ]
+}
